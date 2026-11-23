@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>釜山・APIEMS 2026 旅行手帳</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ===== 色彩（釜山版） ===== */
+:root{
+  --port:#23406B;      /* 釜山港藍 */
+  --fishcake:#D9482F;  /* 魚糕紅 */
+  --gamcheon:#F2B441;  /* 甘川黃 */
+  --dongbaek:#E58FA6;  /* 冬柏粉 */
+  --songdo:#2F7D6B;    /* 松島綠 */
+  --haeundae:#7FB9D6;  /* 海雲台藍 */
+  --bg:#EEF4F3;
+  --card:#FFFFFF;
+  --line:1.5px solid var(--port);
+  --r:16px;
+  --spot:#E3F0F7; --food:#FDF1D8; --shop:#FBE6EC; --base:#F1F3F5; --conf:#E5F0EC;
+  --ink:#1D2B3A; --muted:#5B6878;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;font-size:16px;line-height:1.7}
+.wrap{max-width:560px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right)) calc(48px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left))}
+h1,h2,h3{line-height:1.35;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--port)}
+.card{background:var(--card);border:var(--line);border-radius:var(--r);padding:16px;margin:14px 0}
+.tag{display:inline-block;font-size:13px;font-weight:700;padding:1px 8px;border-radius:999px;border:1.5px solid currentColor;line-height:1.6;vertical-align:middle;white-space:nowrap}
+.tag.sample{color:var(--fishcake);background:#fff}
+.tag.must{color:#fff;background:var(--fishcake);border-color:var(--fishcake)}
+.tag.todo{color:#8a5a00;background:#FFF6E0}
+.tag.rain{color:var(--port);background:#E3F0F7}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.sec-title{display:flex;align-items:center;gap:8px;font-size:22px;font-weight:900;color:var(--port);margin:22px 0 4px}
+.sec-title::before{content:"";width:10px;height:22px;border-radius:4px;background:var(--fishcake)}
+
+/* ===== 首頁 ===== */
+.hero{background:#fff;border:var(--line);border-radius:var(--r);overflow:hidden}
+.hero svg{display:block;width:100%;height:auto}
+.hero-text{padding:14px 16px 16px}
+.hero-text .kicker{font-size:14px;color:var(--songdo);font-weight:700;letter-spacing:.08em}
+.hero-text h1{font-size:26px;font-weight:900;color:var(--port);margin-top:2px}
+.hero-text p{margin:4px 0 0;color:var(--muted)}
+
+/* ===== 導覽 ===== */
+.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 4px;scroll-margin-top:12px}
+.nav button{min-height:72px;background:#fff;border:var(--line);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 2px;font-size:15px;font-weight:700;color:var(--port)}
+.nav button svg{width:26px;height:26px}
+.nav button[aria-selected="true"]{background:var(--port);color:#fff}
+.nav button:focus-visible,.btn:focus-visible,.day-btn:focus-visible{outline:3px solid var(--gamcheon);outline-offset:2px}
+.panel[hidden]{display:none}
+.back{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:56px;margin-top:22px;background:#fff;border:var(--line);border-radius:var(--r);font-weight:700;color:var(--port)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:6px 14px;border-radius:12px;border:var(--line);background:#fff;font-weight:700;color:var(--port);text-decoration:none;font-size:15px}
+.btn.solid{background:var(--port);color:#fff}
+.btn.sm{min-height:38px;padding:4px 10px;font-size:14px}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+
+/* ===== 倒數 ===== */
+.count{display:flex;gap:8px;margin-top:8px}
+.count div{flex:1;text-align:center;background:var(--bg);border-radius:12px;padding:8px 0}
+.count b{display:block;font-size:30px;font-weight:900;color:var(--port);line-height:1.2}
+.count span{font-size:14px;color:var(--muted)}
+.next-box{margin-top:10px;padding:10px 12px;border-radius:12px;background:#FDF1D8}
+
+/* ===== 登機證 ===== */
+.pass{background:#fff;border:var(--line);border-radius:var(--r);margin:14px 0;overflow:hidden}
+.pass-head{display:flex;justify-content:space-between;align-items:center;background:var(--port);color:#fff;padding:10px 16px;font-weight:700}
+.pass-head .dir{background:var(--gamcheon);color:var(--port);border-radius:999px;padding:0 10px;font-size:14px}
+.pass-body{padding:14px 16px 6px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px}
+.pass-body .code{font-size:32px;font-weight:900;color:var(--port);line-height:1.1}
+.pass-body .right{text-align:right}
+.pass-body .time{font-size:20px;font-weight:700}
+.pass-mid{text-align:center;color:var(--muted);font-size:14px}
+.pass-mid svg{width:56px;height:20px;display:block;margin:0 auto}
+.pass-cut{border-top:2px dashed #b8c4cf;margin:10px 16px 0;position:relative}
+.pass-foot{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px 16px 14px;font-size:14px}
+.pass-foot b{display:block;font-size:16px;color:var(--ink)}
+.pass-foot span{color:var(--muted)}
+
+/* ===== 每日行程 ===== */
+.days{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.day-btn{flex:0 0 auto;scroll-snap-align:start;min-width:84px;min-height:72px;background:#fff;border:var(--line);border-radius:14px;padding:6px 8px;text-align:center;line-height:1.3}
+.day-btn b{display:block;font-size:18px;color:var(--port)}
+.day-btn span{font-size:13px;color:var(--muted)}
+.day-btn[aria-selected="true"]{background:var(--port)}
+.day-btn[aria-selected="true"] b,.day-btn[aria-selected="true"] span{color:#fff}
+.sticky{position:sticky;top:0;z-index:5;background:var(--bg);padding:6px 0 8px;margin:0 -2px}
+.sum{background:#fff;border:var(--line);border-radius:var(--r);padding:10px 12px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center}
+.sum .wicon{font-size:36px;line-height:1;grid-row:span 2}
+.sum .temps{font-weight:700}
+.sum .temps .hi{color:var(--fishcake)} .sum .temps .lo{color:var(--port)}
+.sum .wear{grid-column:1/-1;font-size:15px;background:var(--bg);border-radius:10px;padding:4px 10px}
+.sum .hotel{grid-column:1/-1;font-size:15px;border-top:1px dashed #b8c4cf;padding-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.sum .hotel a{font-size:14px;font-weight:700}
+.sum-toggle{float:right;border:none;background:none;color:var(--port);font-size:14px;font-weight:700;padding:0 2px}
+.sum.compact .wear,.sum.compact .hotel{display:none}
+
+.mode{display:grid;grid-template-columns:1fr 1fr;border:var(--line);border-radius:14px;overflow:hidden;margin:12px 0}
+.mode button{min-height:48px;border:none;background:#fff;font-weight:700;color:var(--port)}
+.mode button[aria-pressed="true"]{background:var(--port);color:#fff}
+.day-head{margin:6px 0 4px}
+.day-head h2{font-size:21px;color:var(--port)}
+.day-note{font-size:15px;background:#fff;border-left:4px solid var(--gamcheon);border-radius:8px;padding:8px 12px;margin:8px 0}
+
+.tl{position:relative;margin-top:10px}
+.item{border:var(--line);border-radius:var(--r);padding:12px 14px;position:relative}
+.item.spot{background:var(--spot)} .item.food{background:var(--food)} .item.shop{background:var(--shop)} .item.base{background:var(--base)} .item.conf{background:var(--conf)}
+.item .top{display:flex;align-items:flex-start;gap:10px}
+.item .t{font-weight:900;color:var(--port);font-size:17px;min-width:48px}
+.item h3{font-size:18px;font-weight:700}
+.item .kind{font-size:13px;color:var(--muted);font-weight:700}
+.item .desc{margin:6px 0 0}
+.item dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:8px 0 0;font-size:15px}
+.item dt{color:var(--muted);font-weight:700;white-space:nowrap}
+.item dd{margin:0}
+.item .acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.item.done{opacity:.62}
+.item.done h3{text-decoration:line-through}
+.chk{display:inline-flex;align-items:center;gap:6px;min-height:38px;padding:4px 10px;border-radius:12px;border:var(--line);background:#fff;font-weight:700;color:var(--port);font-size:14px}
+.chk .box{width:20px;height:20px;border:2px solid var(--port);border-radius:6px;display:grid;place-items:center}
+.item.done .chk{background:var(--songdo);color:#fff;border-color:var(--songdo)}
+.item.done .chk .box{border-color:#fff}
+.rainbox{margin-top:8px;padding:8px 10px;border-radius:10px;background:#fff;border:1.5px dashed var(--port);font-size:15px}
+
+.move{margin:0 0 0 26px;border-left:3px dotted var(--port);padding:8px 0 8px 18px;position:relative;font-size:15px}
+.move::before{content:"";position:absolute;left:-8px;top:50%;width:13px;height:13px;margin-top:-7px;border-radius:50%;background:var(--gamcheon);border:2px solid var(--port)}
+.move .mv{background:#fff;border-radius:12px;padding:6px 10px;border:1px solid #c9d4de}
+.move .mv b{color:var(--port)}
+.move .mv .walk{color:var(--songdo);font-weight:700}
+
+.anim-in{animation:pop .5s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+
+/* ===== 花費 ===== */
+.exp-form{display:grid;grid-template-columns:1fr 110px auto;gap:6px;margin-top:8px}
+input[type=text],input[type=number],select{font:inherit;font-size:16px;min-height:44px;border:var(--line);border-radius:12px;padding:6px 10px;background:#fff;width:100%;color:var(--ink)}
+.exp-list{list-style:none;padding:0;margin:10px 0 0}
+.exp-list li{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed #c9d4de}
+.exp-list li span:first-child{flex:1}
+.x{border:none;background:none;color:var(--fishcake);font-size:20px;width:36px;height:36px}
+.total{display:flex;justify-content:space-between;font-weight:900;color:var(--port);margin-top:8px}
+.rate{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:15px}
+.rate input{width:110px}
+
+/* ===== 清單 ===== */
+.prog{height:14px;background:var(--bg);border-radius:999px;overflow:hidden;border:1.5px solid var(--port)}
+.prog i{display:block;height:100%;background:var(--songdo);width:0;transition:width .4s}
+.cl{list-style:none;padding:0;margin:8px 0 0}
+.cl li{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed #c9d4de}
+.cl label{flex:1;display:flex;align-items:center;gap:10px;min-height:40px;cursor:pointer}
+.cl input[type=checkbox]{width:22px;height:22px;accent-color:var(--songdo);flex:0 0 auto}
+.cl li.on label span{text-decoration:line-through;color:var(--muted)}
+.add{display:flex;gap:6px;margin-top:10px}
+
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:8px 0 0}
+.kv dt{color:var(--muted);font-weight:700;white-space:nowrap}
+.kv dd{margin:0}
+.area h3{color:var(--port);font-size:18px}
+.area ul{margin:6px 0 0;padding-left:20px}
+
+/* ===== 插畫動態 ===== */
+.wave{animation:wave 6s ease-in-out infinite alternate}
+.wave2{animation:wave 8s ease-in-out infinite alternate-reverse}
+@keyframes wave{from{transform:translateX(-10px)}to{transform:translateX(10px)}}
+.steam{animation:steam 3.2s ease-in-out infinite;opacity:0}
+.steam.s2{animation-delay:1.1s}.steam.s3{animation-delay:2.1s}
+@keyframes steam{0%{opacity:0;transform:translateY(4px)}30%{opacity:.8}100%{opacity:0;transform:translateY(-14px)}}
+.blink{animation:blink 2.4s ease-in-out infinite}
+.blink:nth-child(2n){animation-delay:.8s}.blink:nth-child(3n){animation-delay:1.6s}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.gull{animation:gull 5s ease-in-out infinite alternate}
+@keyframes gull{from{transform:translate(0,0)}to{transform:translate(14px,-6px)}}
+.flower{transform-box:fill-box;transform-origin:center;animation:sway 4s ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .steam{opacity:.6}
+}
+@media (min-width:480px){.hero-text h1{font-size:30px}}
+</style>
+</head>
+<body>
+<script>
+/* =========================================================
+   TRIP_DATA：所有旅行資料都在這裡，之後只要改這一段
+   - sample:true → 網站上會顯示「範例」標籤
+   - todo:'文字' → 顯示「待確認」標籤
+   - type: spot 景點 / food 美食 / shop 購物 / base 機場飯店 / conf 研討會
+   - move: 從上一個地點到這裡的交通
+   - rain: 雨天替代方案（切換到雨天模式時顯示）
+   - ko: 韓文名稱，用來開 Naver 地圖
+   ========================================================= */
+const TRIP_DATA = {
+  trip: {
+    name: "釜山・APIEMS 2026 研討會之旅",
+    kicker: "BUSAN 2026 · 11/27 – 12/3",
+    start: "2026-11-27", end: "2026-12-03",
+    departAt: "2026-11-27T02:50:00+08:00",
+    returnAt: "2026-12-04T00:25:00+08:00",
+    lat: 35.1151, lon: 129.0403
+  },
+  flights: [
+    { dir:"去程", airline:"易斯達航空 Eastar Jet", no:"ZE984", pnr:"@PNR", aircraft:"B738",
+      from:{code:"TPE", name:"台北桃園", terminal:"第一航廈", time:"02:50", date:"11/27（五）"},
+      to:{code:"PUS", name:"釜山金海", terminal:"國際線航廈", time:"06:05", date:"11/27（五）"},
+      duration:"2 小時 15 分" },
+    { dir:"回程", airline:"易斯達航空 Eastar Jet", no:"ZE987", pnr:"@PNR", aircraft:"B738",
+      from:{code:"PUS", name:"釜山金海", terminal:"國際線航廈", time:"22:10", date:"12/3（四）"},
+      to:{code:"TPE", name:"台北桃園", terminal:"第一航廈", time:"00:25 +1", date:"12/4（五）"},
+      duration:"3 小時 15 分" }
+  ],
+  /* 住宿：in = 入住日、out = 退房日（住 in 當晚到 out 前一晚） */
+  hotels: [
+    { name: "Marant #24", type: "Airbnb 服務式公寓・1 房",
+      fullName: "[1.5房間，行李寄存] 釜山站KTX 3分鐘高層海景 Marant #24",
+      in: "2026-11-27", out: "2026-12-02", period: "11/27（五）– 12/2（三），5 晚",
+      addr: "@ADDR",
+      addrKo: "@ADDRKO",
+      station: "釜山站（地鐵 1 號線／KTX），6 號出口",
+      walk: "步行約 3 分鐘",
+      checkin: "16:00 後（可提早寄放行李）",
+      checkout: "12:00 前（逾時每 30 分鐘加收 ₩10,000）",
+      desk: "一樓櫃台與行李寄放 10:00–23:59（已確認可提早寄放）",
+      bookingNo: "@BK24", bookingSample: true,
+      url: "https://www.airbnb.com.tw/rooms/1429538238115667761",
+      notes: ["房源不提供浴巾與浴袍，請自備", "步行 1 分鐘有 GS25、CU 便利商店", "共用洗衣間，烘乾機免費"] },
+    { name: "Marant House #19", type: "Airbnb 整套・2 房・約 18 坪",
+      fullName: "[釜山站3分鐘、行李寄存、18坪] Marant House #19",
+      in: "2026-12-02", out: "2026-12-03", period: "12/2（三）– 12/3（四），1 晚",
+      addr: "@ADDR",
+      addrKo: "@ADDRKO",
+      station: "釜山站 KTX 1 號出口",
+      walk: "步行約 3 分鐘（約 300 m）",
+      checkin: "16:00 後",
+      checkout: "12:00 前（逾時每 30 分鐘加收 ₩10,000）",
+      desk: "一樓櫃台行李寄放 10:00–24:00（已確認 12/2 早上可提早寄放）",
+      bookingNo: "@BK19", bookingSample: true,
+      url: "https://www.airbnb.com.tw/rooms/1375980526003274059",
+      notes: ["和 #24 同一棟、同一位房東（Marant）", "不提供浴巾與浴袍", "客廳沒有空調；暖氣請依房內說明", "共用洗衣間在 205 室"] }
+  ],
+  conference: {
+    name: "APIEMS 2026", dates: "11/29（日）– 12/2（三）",
+    venue: "BPEX 釜山港國際展覽會議中心（釜山港國際客運碼頭內）",
+    venueKo: "부산항국제전시컨벤션센터",
+    talk: { time:"12/1（二）09:00–10:20", session:"D.6 Human Factors and Systems Safety (2)", no:"D.6.4",
+      title:"Influence of Artificial Fingernail Length and Shape on Hand Strength Performance",
+      room:"會議室待確認" },
+    url: "https://www.apiems2026.org/"
+  },
+  fallbackWeather: { hi:13, lo:5, rain:20, code:2 },
+  days: [
+    { date:"2026-11-27", title:"抵達・梵魚寺・南浦洞", note:"紅眼班機，下午若太累可先回飯店入住（16:00 後）。",
+      items:[
+        {time:"06:05", type:"base", title:"抵達金海國際機場", ko:"김해국제공항", desc:"入境、領行李，約 40–60 分鐘。"},
+        {time:"08:00", type:"base", title:"Marant 寄放行李", ko:"@ADDRKO", q:"@ADDRQ",
+         desc:"已確認可提早寄放；還不能入住（16:00 後）。",
+         move:{mode:"Uber／機場計程車", from:"金海機場", to:"Marant", mins:"35–60 分", note:"目的地輸入住宿韓文地址（解鎖後在「住宿速查」可看到）"}},
+        {time:"08:20", type:"food", title:"麥當勞 釜山草梁DT店", ko:"맥도날드 부산초량DT점", cuisine:"速食早餐", dish:"早餐套餐", budget:"₩6,000–9,000", reserve:"不需訂位",
+         move:{mode:"步行", from:"Marant", to:"麥當勞", dist:"約 800 m", mins:"10–15 分"}},
+        {time:"10:15", type:"spot", must:true, title:"梵魚寺", ko:"범어사", stay:"約 1.5–2 小時",
+         desc:"釜山最具代表性的千年古剎，秋末還有楓葉。",
+         move:{mode:"地鐵 1 號線＋90 號公車", line:"1 號線往老圃 노포", from:"釜山站", to:"梵魚寺站 범어사역", mins:"約 40 分", walk:"出站步行約 3 分到公車站，轉 90 號公車上山約 15 分", note:"公車班次以 Naver Map 為準"},
+         rain:{title:"梵魚寺（縮短版）", desc:"雨天石階濕滑，只參觀大雄殿一帶，停留約 1 小時。"}},
+        {time:"13:00", type:"food", sample:true, title:"南浦洞午餐", ko:"남포동 맛집", cuisine:"釜山鄉土料理", dish:"豬肉湯飯 돼지국밥、小麥冷麵 밀면", budget:"₩10,000–15,000", reserve:"多為現場排隊",
+         move:{mode:"90 號公車＋地鐵 1 號線", line:"1 號線往多大浦 다대포", from:"梵魚寺站", to:"南浦站 남포역", mins:"75–95 分"}},
+        {time:"14:00", type:"shop", title:"光復路商店街・南浦地下街", ko:"광복로 패션거리", goods:"服飾、美妝（Olive Young）、生活雜貨", tax:"貼 Tax Free 標誌的店單筆滿 ₩15,000 可退稅，帶護照", hours:"約 10:30–22:00（各店不同）",
+         move:{mode:"步行", from:"南浦洞餐廳", to:"光復路", dist:"約 300 m", mins:"5 分"}},
+        {time:"15:30", type:"food", sample:true, title:"南浦洞咖啡廳休息", ko:"남포동 카페", cuisine:"咖啡甜點", dish:"拿鐵、可頌", budget:"₩6,000–10,000", reserve:"不需訂位"},
+        {time:"18:00", type:"food", sample:true, title:"札嘎其市場晚餐", ko:"자갈치시장", cuisine:"海鮮", dish:"烤鰻魚 꼼장어、生魚片", budget:"₩25,000–40,000／人", reserve:"現場點餐，先問價",
+         move:{mode:"步行", from:"光復路", to:"札嘎其市場", dist:"約 500 m", mins:"7 分"}},
+        {time:"19:30", type:"shop", title:"BIFF 廣場・國際市場", ko:"BIFF광장", goods:"堅果糖餅 씨앗호떡、小吃、雜貨", tax:"市場攤販多不能退稅", hours:"攤販約至 21:00",
+         move:{mode:"步行", from:"札嘎其市場", to:"BIFF 廣場", dist:"約 300 m", mins:"5 分"}},
+        {time:"21:00", type:"spot", title:"釜山塔（龍頭山公園）", ko:"부산타워", stay:"約 40 分", desc:"俯瞰南浦港夜景，營業至 22:00。",
+         move:{mode:"步行＋戶外電扶梯", from:"BIFF 廣場", to:"龍頭山公園", dist:"約 400 m", mins:"10 分"}},
+        {time:"22:00", type:"base", title:"回 Marant 入住", ko:"@ADDRKO", q:"@ADDRQ", desc:"領回寄放行李，辦理入住。",
+         move:{mode:"地鐵 1 號線", line:"往老圃 노포", from:"南浦站", to:"釜山站", mins:"約 5 分（2 站）", walk:"兩端各步行約 5 分"}}
+      ]},
+    { date:"2026-11-28", title:"剪髮・Spa Land・廣安里", note:"19:00 無人機表演依天候可能取消；Spa 排在醫美之前。",
+      items:[
+        {time:"11:00", type:"shop", title:"新世界百貨 Centum City・剪髮", ko:"신세계백화점 센텀시티점", goods:"11:00 剪髮（固定預約）", tax:"百貨服務台可辦退稅", hours:"約 10:30–20:00（以官網為準）", todo:"沙龍名稱與樓層",
+         move:{mode:"地鐵 1→2 號線", line:"1 號線往老圃 → 西面轉 2 號線往萇山 장산", from:"釜山站", to:"Centum City 站 센텀시티역", mins:"45–60 分", walk:"出站後地下直通百貨"}},
+        {time:"12:30", type:"food", sample:true, title:"新世界百貨美食街午餐", ko:"신세계백화점 센텀시티점 푸드홀", cuisine:"韓式・多國料理", dish:"拌飯、炸醬麵", budget:"₩12,000–18,000", reserve:"不需訂位"},
+        {time:"13:30", type:"shop", title:"新世界百貨購物", ko:"신세계백화점 센텀시티점", goods:"韓國設計品牌、美妝、地下超市零食", tax:"同日同店合併滿 ₩15,000 可退稅", hours:"約 10:30–20:00"},
+        {time:"14:30", type:"spot", title:"Spa Land 汗蒸幕", ko:"스파랜드 센텀시티", stay:"約 2–2.5 小時", desc:"大型溫泉＋汗蒸幕，入場限時 4 小時。",
+         move:{mode:"步行", from:"百貨", to:"Spa Land（同棟 1 樓）", mins:"5 分"}},
+        {time:"17:00", type:"food", sample:true, title:"廣安里海景咖啡", ko:"광안리 오션뷰 카페", cuisine:"咖啡", dish:"海鹽拿鐵", budget:"₩7,000–10,000", reserve:"靠窗位建議早到",
+         move:{mode:"地鐵 2 號線", line:"往梁山 양산", from:"Centum City 站", to:"廣安站 광안역", mins:"約 10 分", walk:"步行到海灘約 15 分"}},
+        {time:"18:00", type:"food", sample:true, title:"廣安里晚餐", ko:"광안리 횟집", cuisine:"海鮮", dish:"生魚片、烤貝 조개구이", budget:"₩30,000–45,000／人", reserve:"週六人多，建議 18:00 前入座"},
+        {time:"19:00", type:"spot", must:true, title:"廣安里無人機燈光秀", ko:"광안리 드론쇼", stay:"約 15–20 分", desc:"週六晚上固定演出，依天候可能取消，提早找沙灘位置。",
+         rain:{title:"室內看廣安大橋夜景", desc:"表演取消時，改到海景咖啡或餐廳二樓看大橋燈光。"}},
+        {time:"19:30", type:"spot", title:"廣安大橋夜景散步", ko:"광안리해수욕장", stay:"約 1 小時", desc:"沿海灘散步拍大橋。"},
+        {time:"21:00", type:"base", title:"回 Marant", ko:"@ADDRKO", q:"@ADDRQ",
+         move:{mode:"地鐵 2→1 號線", line:"2 號線往梁山 → 西面轉 1 號線往多大浦", from:"廣安站", to:"釜山站", mins:"50–75 分", walk:"海灘走回廣安站約 15 分"}}
+      ]},
+    { date:"2026-11-29", title:"甘川洞韓服・松島・研討會報到", note:"韓服 10:00–13:00；15:00–18:00 不穿韓服（研討會報到）。",
+      items:[
+        {time:"10:00", type:"spot", must:true, title:"甘川洞文化村・韓服", ko:"감천문화마을", stay:"10:00–13:00（含換裝、歸還）", desc:"彩色階梯村落，穿韓服拍照；13:00 前歸還。", todo:"韓服店預約",
+         move:{mode:"地鐵 1 號線＋村巴", line:"1 號線往多大浦 다대포", from:"釜山站", to:"土城站 토성역 6 號出口", mins:"55–75 分（全程）", walk:"轉沙下 1-1 或西區 2、2-2 村巴上山約 15 分"},
+         rain:{title:"室內韓服攝影", desc:"改在韓服店附設攝影棚拍照，村內只逛有遮蔽的街道。"}},
+        {time:"13:00", type:"food", sample:true, title:"甘川洞午餐", ko:"감천문화마을 맛집", cuisine:"輕食", dish:"魚糕、紫菜飯捲", budget:"₩8,000–12,000", reserve:"簡單吃，控制在 30 分內"},
+        {time:"13:45", type:"spot", title:"松島雲端步道", ko:"송도구름산책로", stay:"約 20 分", desc:"海上透明步道。",
+         move:{mode:"計程車", from:"甘川洞", to:"松島雲端步道", mins:"20–35 分"}},
+        {time:"14:10", type:"spot", must:true, title:"松島海上纜車", ko:"송도해상케이블카", stay:"約 60 分（建議來回）", desc:"橫越海灣的纜車，Crystal 車廂地板透明。",
+         move:{mode:"步行", from:"雲端步道", to:"松島灣站", dist:"約 500 m", mins:"5–10 分"},
+         rain:{title:"松島海灘咖啡", desc:"強風或大雨纜車可能停駛，改在海灘旁咖啡廳休息後直接去報到。"}},
+        {time:"15:30", type:"conf", title:"APIEMS 2026 報到", ko:"부산항국제전시컨벤션센터", desc:"15:00–18:00 報到，領名牌與議程，可留在會場到 18:00。",
+         move:{mode:"計程車", from:"松島", to:"BPEX", mins:"20–25 分"}},
+        {time:"18:30", type:"food", sample:true, title:"西面晚餐", ko:"서면 맛집", cuisine:"韓式烤肉", dish:"豬五花 삼겹살", budget:"₩18,000–25,000／人", reserve:"週日晚上人多可先查 Catch Table",
+         move:{mode:"步行＋地鐵 1 號線", line:"往老圃 노포", from:"釜山站", to:"西面站 서면역", mins:"約 15 分", walk:"BPEX 走到釜山站約 15 分"}},
+        {time:"19:30", type:"shop", title:"樂天百貨・西面街頭小吃", ko:"롯데백화점 부산본점", goods:"美妝、韓國品牌；路邊黑糖餅、魚糕", tax:"百貨可退稅，帶護照", hours:"百貨約至 20:00–20:30"},
+        {time:"21:00", type:"base", title:"回 Marant", ko:"@ADDRKO", q:"@ADDRQ",
+         move:{mode:"地鐵 1 號線", line:"往多大浦 다대포", from:"西面站", to:"釜山站", mins:"約 15 分"}}
+      ]},
+    { date:"2026-11-30", title:"研討會・西面・田浦咖啡街", note:"原表白天待定，以下為建議版；上午研討會為可選。18:00 前不穿韓服。",
+      items:[
+        {time:"09:30", type:"conf", sample:true, title:"APIEMS 聽演講（可選）", ko:"부산항국제전시컨벤션센터", desc:"想聽的場次再自行確認，預計待到 12:00。", todo:"想聽的場次",
+         move:{mode:"步行", from:"Marant", to:"BPEX", dist:"約 1.2 km", mins:"15–20 分（或計程車 5 分）"}},
+        {time:"12:30", type:"food", sample:true, title:"西面豬肉湯飯街", ko:"서면 돼지국밥골목", cuisine:"釜山鄉土料理", dish:"豬肉湯飯 돼지국밥", budget:"₩10,000–12,000", reserve:"不需訂位",
+         move:{mode:"地鐵 1 號線", line:"往老圃 노포", from:"釜山站", to:"西面站", mins:"約 15 分", walk:"BPEX 走到釜山站約 15 分"}},
+        {time:"13:30", type:"shop", sample:true, title:"西面地下街・樂天百貨", ko:"서면지하상가", goods:"平價服飾、飾品；百貨美妝", tax:"地下街小店多數不能退稅，百貨可以", hours:"地下街約 10:00–21:30",
+         move:{mode:"步行", from:"湯飯街", to:"西面地下街", mins:"5 分"}},
+        {time:"15:00", type:"food", sample:true, title:"田浦咖啡街", ko:"전포카페거리", cuisine:"咖啡甜點", dish:"特色甜點、手沖咖啡", budget:"₩8,000–14,000", reserve:"不需訂位",
+         move:{mode:"步行", from:"西面", to:"田浦咖啡街", dist:"約 1 km", mins:"15 分"}},
+        {time:"16:30", type:"shop", sample:true, title:"田浦選物店", ko:"전포동 소품샵", goods:"文創小物、香氛、明信片", tax:"多為小店，通常不能退稅", hours:"約 12:00–20:00"},
+        {time:"18:00", type:"food", sample:true, title:"西面晚餐", ko:"서면 맛집", cuisine:"韓式", dish:"辣炒雞排 닭갈비", budget:"₩15,000–20,000", reserve:"不需訂位",
+         move:{mode:"步行", from:"田浦", to:"西面", mins:"15 分"}},
+        {time:"20:30", type:"spot", title:"黃嶺山觀景台", ko:"황령산 전망대", stay:"約 1 小時", desc:"俯瞰整個釜山的夜景，山上風大要穿暖。",
+         move:{mode:"計程車", from:"西面", to:"黃嶺山觀景台", mins:"15–20 分"},
+         rain:{title:"西面夜間購物", desc:"雨天山上沒視野，改逛西面地下街與 Olive Young。"}},
+        {time:"22:00", type:"base", title:"回 Marant", ko:"@ADDRKO", q:"@ADDRQ",
+         move:{mode:"計程車", from:"黃嶺山", to:"Marant", mins:"20–25 分"}}
+      ]},
+    { date:"2026-12-01", title:"論文發表・白淺文化村・影島", note:"09:00 發表 D.6.4。12:00 前、18:00 後不穿韓服。",
+      items:[
+        {time:"09:00", type:"conf", must:true, title:"論文發表 D.6.4", ko:"부산항국제전시컨벤션센터", desc:"Influence of Artificial Fingernail Length and Shape on Hand Strength Performance｜Session D.6 Human Factors and Systems Safety (2)，09:00–10:20。", todo:"會議室",
+         move:{mode:"步行", from:"Marant", to:"BPEX", dist:"約 1.2 km", mins:"15–20 分（08:30 出發）"}},
+        {time:"11:00", type:"spot", must:true, title:"白淺文化村", ko:"흰여울문화마을", stay:"約 1.5 小時", desc:"影島海崖邊的白色村落，坡階多。",
+         move:{mode:"計程車", from:"BPEX", to:"白淺文化村", mins:"20–30 分（10:30 出發）"},
+         rain:{title:"白淺文化村海景咖啡", desc:"雨天坡階濕滑，挑一家海景咖啡坐著看海。"}},
+        {time:"12:30", type:"food", sample:true, title:"白淺文化村午餐", ko:"흰여울문화마을 맛집", cuisine:"韓式", dish:"海鮮刀削麵 칼국수", budget:"₩10,000–15,000", reserve:"不需訂位"},
+        {time:"13:30", type:"spot", title:"影島絕影海岸步道", ko:"절영해안산책로", stay:"約 1 小時", desc:"沿海步道，依天氣調整長度。",
+         move:{mode:"步行", from:"白淺文化村", to:"絕影海岸步道", mins:"5 分（在村落下方）"},
+         rain:{title:"國立海洋博物館", ko:"국립해양박물관", desc:"影島的室內博物館，免費入場（計程車約 10 分）。"}},
+        {time:"15:00", type:"food", sample:true, title:"影島海景咖啡", ko:"영도 오션뷰 카페", cuisine:"咖啡", dish:"季節飲品", budget:"₩7,000–10,000", reserve:"不需訂位"},
+        {time:"16:00", type:"shop", title:"南浦洞伴手禮", ko:"삼진어묵 남포점", goods:"三進魚糕、海苔、柚子茶、堅果糖餅", tax:"三進魚糕等商店單筆滿 ₩15,000 可問退稅", hours:"約 09:00–21:00",
+         move:{mode:"計程車／公車", from:"影島", to:"南浦洞", mins:"20–40 分"}},
+        {time:"18:00", type:"food", sample:true, title:"南浦洞晚餐", ko:"남포동 맛집", cuisine:"韓式", dish:"牛骨湯 / 辣燉雞", budget:"₩12,000–20,000", reserve:"不需訂位"},
+        {time:"20:30", type:"spot", title:"青鶴水邊公園夜景", ko:"청학수변공원", stay:"約 40 分", desc:"看北港大橋與港口夜景。",
+         move:{mode:"計程車", from:"南浦洞", to:"青鶴水邊公園", mins:"約 15 分"}},
+        {time:"21:30", type:"base", title:"回 Marant", ko:"@ADDRKO", q:"@ADDRQ",
+         move:{mode:"計程車", from:"青鶴", to:"Marant", mins:"約 15 分"}}
+      ]},
+    { date:"2026-12-02", title:"換房・Skyline Luge 滑車・西面醫美", note:"今天換房：早上 #24 退房寄行李，晚上入住 #19。醫美時段為預留，診所未定；醫美後避免汗蒸幕與飲酒。",
+      items:[
+        {time:"08:45", type:"base", title:"Marant #24 退房・寄放行李", ko:"@ADDRKO", q:"@ADDRQ", desc:"行李寄在一樓櫃台（已確認可提早寄放），晚上入住 #19 時一起領。"},
+        {time:"10:00", type:"spot", must:true, title:"Skyline Luge 釜山（Osiria）", ko:"스카이라인루지 부산", stay:"約 2 小時（玩 2–3 趟）", desc:"10:00 開門，報到、聽說明後上山滑。",
+         move:{mode:"Uber／計程車", from:"Marant", to:"Osiria", mins:"45–65 分（09:00 出發）", note:"大眾運輸需轉東海線到 오시리아站，再步行約 20 分"},
+         rain:{title:"樂天 Premium Outlet 東釜山店", ko:"롯데프리미엄아울렛 동부산점", desc:"雨天滑車可能暫停，改逛同在 Osiria 的 Outlet。"}},
+        {time:"12:00", type:"food", sample:true, title:"Osiria 午餐", ko:"오시리아 맛집", cuisine:"韓式", dish:"海鮮拉麵、烤魚", budget:"₩12,000–18,000", reserve:"不需訂位"},
+        {time:"14:00", type:"base", title:"西面醫美（預留）", ko:"서면 피부과", desc:"14:00–17:30 預留給諮詢與療程。", todo:"診所地址、療程、術後限制",
+         move:{mode:"Uber／計程車", from:"Osiria", to:"西面", mins:"40–65 分（13:00 出發）"}},
+        {time:"18:00", type:"food", sample:true, title:"飯店附近輕鬆晚餐", ko:"초량동 맛집", cuisine:"清淡韓式", dish:"粥 / 湯飯", budget:"₩10,000–14,000", reserve:"不需訂位",
+         move:{mode:"地鐵 1 號線", line:"往多大浦 다대포", from:"西面站", to:"釜山站", mins:"20–30 分"}},
+        {time:"19:00", type:"base", title:"入住 Marant House #19・領行李", ko:"@ADDRKO", q:"@ADDRQ", desc:"到一樓櫃台領回早上寄的行李，辦理入住。",
+         move:{mode:"步行", from:"餐廳", to:"Marant", mins:"5–10 分"}},
+        {time:"19:30", type:"base", sample:true, title:"晚上自由時間", desc:"依術後狀況休息或附近散步。", todo:"晚上行程"}
+      ]},
+    { date:"2026-12-03", title:"海雲台・天空膠囊・返台", note:"15:00 天空膠囊從尾浦出發（已訂）；14:30 前一定要到尾浦站。班機 22:10 起飛。",
+      items:[
+        {time:"09:00", type:"base", title:"Marant House #19 退房・寄放行李", ko:"@ADDRKO", q:"@ADDRQ", desc:"請櫃台寄放到傍晚，確認 17:20 回來領。"},
+        {time:"10:45", type:"food", title:"海雲台市場", ko:"해운대시장", cuisine:"市場小吃", dish:"魚糕、辣炒年糕、血腸", budget:"₩10,000–20,000", reserve:"不需訂位",
+         move:{mode:"地鐵 1→2 號線", line:"1 號線往老圃 → 西面轉 2 號線往萇山 장산", from:"釜山站", to:"海雲台站 해운대역", mins:"65–85 分", walk:"出站步行到市場約 5 分"}},
+        {time:"11:30", type:"spot", title:"海雲台海灘", ko:"해운대해수욕장", stay:"約 30 分", desc:"往海灘東側尾浦方向走。",
+         move:{mode:"步行", from:"市場", to:"海灘", dist:"約 300 m", mins:"5 分"},
+         rain:{title:"SEA LIFE 釜山水族館", ko:"씨라이프 부산아쿠아리움", desc:"就在海灘旁的室內水族館。"}},
+        {time:"13:15", type:"spot", title:"青沙浦（紅白燈塔）", ko:"청사포", stay:"約 15 分", desc:"拍完照馬上去搭海岸列車。",
+         move:{mode:"步行（海雲台綠色鐵道步道）", from:"海灘東端・尾浦", to:"青沙浦", dist:"約 3 km", mins:"60–90 分（含拍照）"},
+         rain:{title:"青沙浦（搭計程車前往）", desc:"雨天不走步道，海雲台搭計程車約 10 分。"}},
+        {time:"14:00", type:"spot", must:true, title:"尾浦站報到 → 15:00 天空膠囊", ko:"해운대 블루라인파크 미포정거장", stay:"報到 14:00–14:30，搭乘約 30 分",
+         desc:"已訂 15:00 尾浦 → 青沙浦單程，不可從青沙浦上車。",
+         move:{mode:"海岸列車 Beach Train", line:"往尾浦 미포 方向", from:"青沙浦站", to:"尾浦站", mins:"10–15 分＋候車 30–50 分", note:"若等太久改搭計程車，14:30 前一定要到"}},
+        {time:"17:20", type:"base", title:"Marant 領行李", ko:"@ADDRKO", q:"@ADDRQ", desc:"確認護照、錢包、充電器。",
+         move:{mode:"Uber／計程車", from:"青沙浦", to:"Marant", mins:"60–80 分（15:40 出發）"}},
+        {time:"18:40", type:"base", title:"金海機場報到", ko:"김해국제공항 국제선", desc:"ZE987 22:10 起飛，報到、退稅、安檢，緩衝約 3 小時。",
+         move:{mode:"Uber／計程車", from:"Marant", to:"金海機場國際線", mins:"40–60 分（17:40 出發）"}},
+        {time:"22:10", type:"base", title:"ZE987 起飛 → 00:25 抵達桃園", ko:"김해국제공항 국제선", desc:"回家囉。"}
+      ]}
+  ],
+  checklist: {
+    todo: ["易斯達 ZE984 線上報到","確認是否需要 K-ETA（出發前查官網）","Airbnb 訊息告知 08:00 抵達要寄行李","填入 #19 的訂房編號","下載發表簡報並備份到 USB","確認 12/1 發表會議室","預約甘川洞韓服店","確認 11/28 剪髮沙龍與樓層","確認 12/2 醫美診所與療程","購買 Skyline Luge 票","確認海岸列車票與時刻","換韓元／準備 T-money 或 WOWPASS","買 eSIM 或網卡","保旅平險","安裝 Naver Map、Kakao T、Papago"],
+    pack: ["護照","研討會名牌・註冊確認信","筆電＋充電器","簡報備份 USB","發表用正式服裝","保暖外套・圍巾","好走的鞋","浴巾（房源不提供）","轉接頭（韓國 220V，C/F 型）","行動電源（只能放手提）","常備藥","雨傘","換洗衣物 7 天","購物袋"]
+  },
+  areas: [
+    {name:"南浦洞・札嘎其", ko:"남포동", items:["三進魚糕 삼진어묵（魚糕禮盒）","BIFF 廣場堅果糖餅","國際市場海苔、韓式雜貨"], tax:"三進魚糕與大型商店可退稅；市場攤販多數不行。"},
+    {name:"西面・田浦", ko:"서면", items:["樂天百貨釜山本店（美妝、品牌）","Olive Young（面膜、彩妝）","田浦選物店文創小物"], tax:"百貨與 Olive Young 單筆滿 ₩15,000 可即時退稅，記得帶護照。"},
+    {name:"Centum City", ko:"센텀시티", items:["新世界百貨（韓國設計品牌）","地下超市零食、泡麵、柚子茶"], tax:"百貨同日消費可合併到服務台辦理退稅。"},
+    {name:"海雲台・Osiria", ko:"해운대", items:["古來思魚糕 고래사어묵","樂天 Premium Outlet 東釜山店"], tax:"Outlet 有退稅櫃台；機場出境前可再辦理未退的單據。"}
+  ],
+  secret: { salt:"6Sqvq/cPrW8+uiX5rA164Q==", iv:"P0iBVAtu6nOMAJJ/", data:"6A7vccS+t97m7QwHvoUbLbmhUgeW/KgpynIWc0xFR9HoDVpW6bEXjud51IjMsdr2+9vegL3pqMAT3rb+TDNfnKkNzobVX7JI2j0zWB3QbRtXNL0OLCilH27bPXbQnaQ4kkmdu7m4jCJ6v8+Y+YpSffij9P32YzoxG34jpuSblM2gPp8U2DTJV2shQ2C9wRBD966GRqDeTGlfWSU8AUH56S/Z5l2yGkWWpH1onvUXF2m4WKdT7DnSqZCwJdUbqYu2YE8IhMiq3FY+GAsPn+Q4tykXFLfgzPqg3mpLQl7KbtzY8p91bcIb+Ok5KjiXGuZ9BvpLIhLGcfyrgwK78nsdPQ==" },
+  defaultRate: 0.0235
+};
+</script>
+
+<div class="wrap">
+  <header class="hero" aria-label="釜山插畫">
+    <svg viewBox="0 0 360 210" role="img" aria-label="廣安大橋、甘川洞彩色房子、海鷗與熱魚糕">
+      <rect width="360" height="210" fill="#F7FAFA"/>
+      <circle cx="292" cy="44" r="20" fill="#F2B441"/>
+      <!-- 甘川洞山坡 -->
+      <path d="M0 120 Q60 60 140 104 L140 140 L0 140Z" fill="#2F7D6B"/>
+      <g stroke="#23406B" stroke-width="1.2">
+        <rect x="16" y="100" width="16" height="13" fill="#E58FA6"/><rect x="34" y="92" width="14" height="12" fill="#F2B441"/>
+        <rect x="50" y="86" width="16" height="13" fill="#7FB9D6"/><rect x="68" y="88" width="14" height="12" fill="#fff"/>
+        <rect x="84" y="94" width="16" height="12" fill="#D9482F"/><rect x="102" y="100" width="14" height="12" fill="#F2B441"/>
+        <rect x="22" y="116" width="15" height="12" fill="#fff"/><rect x="40" y="108" width="16" height="13" fill="#7FB9D6"/>
+        <rect x="60" y="104" width="15" height="12" fill="#E58FA6"/><rect x="78" y="110" width="16" height="12" fill="#fff"/>
+        <rect x="98" y="116" width="15" height="12" fill="#7FB9D6"/><rect x="116" y="112" width="14" height="12" fill="#E58FA6"/>
+      </g>
+      <!-- 廣安大橋 -->
+      <g stroke="#23406B" stroke-width="2" fill="none">
+        <line x1="120" y1="122" x2="360" y2="122"/>
+        <line x1="190" y1="122" x2="190" y2="70"/><line x1="290" y1="122" x2="290" y2="70"/>
+        <path d="M120 112 Q155 116 190 72 Q240 116 290 72 Q325 116 360 108" stroke-width="1.5"/>
+      </g>
+      <g stroke="#23406B" stroke-width="1" opacity=".6">
+        <line x1="160" y1="105" x2="160" y2="122"/><line x1="175" y1="92" x2="175" y2="122"/>
+        <line x1="210" y1="92" x2="210" y2="122"/><line x1="240" y1="104" x2="240" y2="122"/><line x1="270" y1="92" x2="270" y2="122"/>
+        <line x1="310" y1="92" x2="310" y2="122"/><line x1="335" y1="105" x2="335" y2="122"/>
+      </g>
+      <g fill="#F2B441">
+        <circle class="blink" cx="190" cy="68" r="3"/><circle class="blink" cx="290" cy="68" r="3"/>
+        <circle class="blink" cx="150" cy="122" r="2"/><circle class="blink" cx="220" cy="122" r="2"/>
+        <circle class="blink" cx="250" cy="122" r="2"/><circle class="blink" cx="320" cy="122" r="2"/><circle class="blink" cx="345" cy="122" r="2"/>
+      </g>
+      <!-- 海 -->
+      <rect x="0" y="126" width="360" height="84" fill="#7FB9D6"/>
+      <g class="wave" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round">
+        <path d="M10 146 q10 -6 20 0 t20 0"/><path d="M120 160 q10 -6 20 0 t20 0"/><path d="M240 142 q10 -6 20 0 t20 0"/>
+      </g>
+      <g class="wave2" stroke="#EEF4F3" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8">
+        <path d="M60 180 q10 -6 20 0 t20 0"/><path d="M190 190 q10 -6 20 0 t20 0"/><path d="M300 170 q8 -5 16 0 t16 0"/>
+      </g>
+      <!-- 海鷗 -->
+      <g class="gull" stroke="#23406B" stroke-width="2" fill="none" stroke-linecap="round">
+        <path d="M206 38 q6 -7 12 0 q6 -7 12 0"/><path d="M240 54 q4 -5 8 0 q4 -5 8 0"/>
+      </g>
+      <!-- 熱魚糕杯 -->
+      <g>
+        <path class="steam" d="M42 160 q-5 -7 0 -14 q5 -7 0 -14" stroke="#23406B" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <path class="steam s2" d="M54 158 q-5 -7 0 -14 q5 -7 0 -14" stroke="#23406B" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <path class="steam s3" d="M66 160 q-5 -7 0 -14 q5 -7 0 -14" stroke="#23406B" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <line x1="60" y1="134" x2="60" y2="176" stroke="#23406B" stroke-width="2"/>
+        <path d="M54 146 q6 -4 12 0 q-6 4 -12 0 q6 4 12 8 q-6 4 -12 0 q6 4 12 8" fill="#F2B441" stroke="#23406B" stroke-width="1.4"/>
+        <path d="M30 168 h48 l-6 34 h-36z" fill="#D9482F" stroke="#23406B" stroke-width="1.6"/>
+        <text x="54" y="191" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="sans-serif">어묵</text>
+      </g>
+      <!-- 冬柏花 -->
+      <g class="flower"><circle cx="330" cy="186" r="9" fill="#E58FA6" stroke="#23406B" stroke-width="1.4"/><circle cx="330" cy="186" r="3" fill="#F2B441"/></g>
+      <g class="flower"><circle cx="310" cy="198" r="7" fill="#D9482F" stroke="#23406B" stroke-width="1.4"/><circle cx="310" cy="198" r="2.4" fill="#F2B441"/></g>
+    </svg>
+    <div class="hero-text">
+      <div class="kicker" id="kicker"></div>
+      <h1 id="tripName"></h1>
+      <p>學術發表＋港都散步，7 天 6 夜</p>
+    </div>
+  </header>
+
+  <nav class="nav" id="nav" role="tablist" aria-label="主選單">
+    <button role="tab" data-tab="overview" aria-selected="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>總覽</button>
+    <button role="tab" data-tab="days" aria-selected="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>每日行程</button>
+    <button role="tab" data-tab="check" aria-selected="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.5 1.5L7 5M3.5 12l1.5 1.5L7 11M3.5 18l1.5 1.5L7 17"/></svg>行前清單</button>
+    <button role="tab" data-tab="stay" aria-selected="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20V8l9-4 9 4v12"/><path d="M9 20v-6h6v6"/></svg>住宿速查</button>
+  </nav>
+
+  <section class="panel" id="p-overview"></section>
+  <section class="panel" id="p-days" hidden></section>
+  <section class="panel" id="p-check" hidden></section>
+  <section class="panel" id="p-stay" hidden></section>
+</div>
+
+<script>
+(function(){
+const D = TRIP_DATA;
+/* ---------- 隱藏資料（訂位代號、地址、訂房編號）：輸入密碼解鎖 ---------- */
+let S = null;
+const LOCKED = {PNR:"🔒 已隱藏", ADDR:"釜山站附近（輸入密碼後顯示）", ADDRKO:"부산역", ADDRQ:"Busan Station", BK24:"🔒 已隱藏", BK19:"🔒 已隱藏"};
+const R = v => (typeof v === "string" && v[0] === "@") ? ((S && S[v.slice(1)]) ?? LOCKED[v.slice(1)] ?? "") : v;
+async function unlock(pw){
+  try{
+    const b = x => Uint8Array.from(atob(x), c => c.charCodeAt(0));
+    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+    const key = await crypto.subtle.deriveKey({name:"PBKDF2", salt:b(D.secret.salt), iterations:150000, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+    const out = await crypto.subtle.decrypt({name:"AES-GCM", iv:b(D.secret.iv)}, key, b(D.secret.data));
+    S = JSON.parse(new TextDecoder().decode(out));
+    return true;
+  }catch(e){ return false; }
+}
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem("busan2026_"+k); return v==null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem("busan2026_"+k, JSON.stringify(v)); }catch(e){} }
+};
+const WEEK = ["日","一","二","三","四","五","六"];
+const TYPE = {spot:"觀光景點", food:"美食餐廳", shop:"購物", base:"交通・住宿", conf:"研討會"};
+const gmap = q => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
+const nmap = q => "https://map.naver.com/p/search/" + encodeURIComponent(q);
+const backBtn = `<button class="back" data-back>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>返回主選單</button>`;
+
+$("#kicker").textContent = D.trip.kicker;
+$("#tripName").textContent = D.trip.name;
+
+/* ---------- 導覽 ---------- */
+const tabs = [...document.querySelectorAll("#nav button")];
+function showTab(name){
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.tab===name));
+  document.querySelectorAll(".panel").forEach(p => p.hidden = p.id !== "p-"+name);
+  store.set("tab", name);
+  if(name==="days") renderDay(true);
+}
+tabs.forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
+document.addEventListener("click", e => {
+  if(e.target.closest("[data-back]")){
+    const nav = $("#nav");
+    nav.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start"});
+  }
+});
+
+/* ---------- 時間工具（釜山時間） ---------- */
+function seoulNow(){
+  const f = new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false});
+  const p = Object.fromEntries(f.formatToParts(new Date()).map(x=>[x.type,x.value]));
+  return {date:`${p.year}-${p.month}-${p.day}`, time:`${p.hour==="24"?"00":p.hour}:${p.minute}`};
+}
+function dayInfo(dateStr){
+  const d = new Date(dateStr+"T00:00:00+09:00");
+  const idx = Math.round((d - new Date(D.trip.start+"T00:00:00+09:00"))/86400000);
+  const [y,m,dd] = dateStr.split("-");
+  return {md:`${+m}/${+dd}`, wk: WEEK[new Date(Date.UTC(+y,+m-1,+dd)).getUTCDay()], n: idx+1};
+}
+
+/* ---------- 總覽 ---------- */
+function plane(){ return `<svg viewBox="0 0 56 20"><line x1="2" y1="10" x2="54" y2="10" stroke="#9aa8b6" stroke-width="1.5" stroke-dasharray="3 3"/><path d="M24 4l10 6-10 6 2-6z" fill="#23406B"/></svg>`; }
+function passHTML(f){
+  return `<article class="pass">
+    <div class="pass-head"><span>${esc(f.airline)}</span><span class="dir">${esc(f.dir)}</span></div>
+    <div class="pass-body">
+      <div><div class="code">${esc(f.from.code)}</div><div class="small muted">${esc(f.from.name)}</div><div class="time">${esc(f.from.time)}</div></div>
+      <div class="pass-mid">${plane()}${esc(f.duration)}</div>
+      <div class="right"><div class="code">${esc(f.to.code)}</div><div class="small muted">${esc(f.to.name)}</div><div class="time">${esc(f.to.time)}</div></div>
+    </div>
+    <div class="pass-cut"></div>
+    <div class="pass-foot">
+      <div><span>航班</span><b>${esc(f.no)}</b></div>
+      <div><span>日期</span><b>${esc(f.from.date)}</b></div>
+      <div><span>訂位代號</span><b>${esc(R(f.pnr))}</b></div>
+      <div><span>出發航廈</span><b>${esc(f.from.terminal)}</b></div>
+      <div><span>抵達航廈</span><b>${esc(f.to.terminal)}</b></div>
+      <div><span>機型</span><b>${esc(f.aircraft)}</b></div>
+    </div>
+  </article>`;
+}
+function renderOverview(){
+  const c = D.conference;
+  $("#p-overview").innerHTML = `
+    <div class="card" id="countCard"></div>
+    <div class="card" id="lockCard"></div>
+    <h2 class="sec-title">航班</h2>
+    ${D.flights.map(passHTML).join("")}
+    <h2 class="sec-title">研討會</h2>
+    <div class="card">
+      <h3 style="color:var(--port);font-size:19px">${esc(c.name)}・${esc(c.dates)}</h3>
+      <p class="muted" style="margin:4px 0 0">${esc(c.venue)}</p>
+      <div class="next-box" style="margin-top:10px">
+        <b>我的發表 ${esc(c.talk.no)}</b>　${esc(c.talk.time)}<br>
+        <span class="small">${esc(c.talk.session)}</span><br>
+        <span class="small">${esc(c.talk.title)}</span><br>
+        <span class="tag todo">待確認</span> <span class="small">${esc(c.talk.room)}</span>
+      </div>
+      <div class="btnrow">
+        <a class="btn sm" href="${gmap("BPEX Busan Port International Exhibition Convention Center")}" target="_blank" rel="noopener">Google 地圖</a>
+        <a class="btn sm" href="${nmap(c.venueKo)}" target="_blank" rel="noopener">Naver 地圖</a>
+        <a class="btn sm" href="${esc(c.url)}" target="_blank" rel="noopener">研討會網站</a>
+      </div>
+    </div>
+    ${backBtn}`;
+  updateCount();
+  renderLock();
+}
+function renderLock(){
+  const el = $("#lockCard"); if(!el) return;
+  if(S){
+    el.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+      <span>🔓 <b>已解鎖</b><span class="small muted">　訂位代號與住宿地址已顯示</span></span>
+      <button class="btn sm" id="lockBtn">重新上鎖</button></div>`;
+  } else {
+    el.innerHTML = `<b style="color:var(--port)">🔒 訂位代號、住宿地址已隱藏</b>
+      <p class="small muted" style="margin:2px 0 0">同行的人輸入密碼即可查看，這台裝置會記住。</p>
+      <form class="add" id="lockForm"><input type="password" id="pw" placeholder="輸入密碼" aria-label="密碼" autocomplete="current-password"><button class="btn solid" type="submit">解鎖</button></form>
+      <p class="small" id="pwMsg" style="margin:4px 0 0;color:var(--fishcake)"></p>`;
+  }
+}
+function rerenderAll(){ renderOverview(); renderDay(false); renderStay(); }
+$("#p-overview").addEventListener("submit", async e => {
+  if(e.target.id !== "lockForm") return; e.preventDefault();
+  const pw = $("#pw").value;
+  if(await unlock(pw)){ store.set("pw", pw); rerenderAll(); }
+  else { $("#pwMsg").textContent = "密碼不對，請再試一次。"; }
+});
+$("#p-overview").addEventListener("click", e => {
+  if(e.target.closest("#lockBtn")){ S = null; store.set("pw", null); rerenderAll(); }
+});
+function nextItem(now){
+  for(const day of D.days){
+    if(day.date < now.date) continue;
+    for(const it of day.items){
+      if(day.date > now.date || it.time > now.time) return {day, it};
+    }
+  }
+  return null;
+}
+function updateCount(){
+  const el = $("#countCard"); if(!el) return;
+  const now = Date.now();
+  const dep = new Date(D.trip.departAt).getTime();
+  const ret = new Date(D.trip.returnAt).getTime();
+  if(now < dep){
+    let s = Math.floor((dep-now)/1000);
+    const d = Math.floor(s/86400); s%=86400; const h = Math.floor(s/3600); s%=3600; const m = Math.floor(s/60);
+    el.innerHTML = `<b style="color:var(--port)">距離 ZE984 起飛還有</b>
+      <div class="count"><div><b>${d}</b><span>天</span></div><div><b>${h}</b><span>小時</span></div><div><b>${m}</b><span>分鐘</span></div></div>
+      <div class="next-box small">11/27（五）02:50 桃園 T1 起飛・建議 00:50 前到機場</div>`;
+  } else if(now < ret){
+    const t = seoulNow();
+    const di = dayInfo(t.date);
+    const nx = nextItem(t);
+    el.innerHTML = `<b style="color:var(--port)">旅行進行中（釜山時間 ${t.time}）</b>
+      <div class="count"><div><b>Day ${Math.min(Math.max(di.n,1),7)}</b><span>${di.md}（${di.wk}）</span></div></div>
+      <div class="next-box"><b>下一個行程</b><br>${nx ? `${nx.day.date===t.date?"":dayInfo(nx.day.date).md+" "}${esc(nx.it.time)}　${esc(nx.it.title)}` : "今天的行程都完成了"}</div>`;
+  } else {
+    el.innerHTML = `<b style="color:var(--port)">旅程結束，歡迎回家！</b><p class="muted" style="margin:4px 0 0">發表辛苦了。</p>`;
+  }
+}
+
+/* ---------- 天氣 ---------- */
+let weather = null, weatherLive = false;
+const WMO = c => c===0?["☀️","晴"]:c<=2?["🌤️","晴時多雲"]:c===3?["☁️","陰"]:c<=48?["🌫️","有霧"]:c<=67?["🌧️","下雨"]:c<=77?["❄️","下雪"]:c<=82?["🌦️","陣雨"]:["⛈️","雷雨"];
+function wear(hi, lo, rain){
+  let w = lo < 3 ? "羽絨外套＋圍巾手套" : lo < 8 ? "保暖外套＋毛衣，海邊風大加圍巾" : lo < 13 ? "薄外套＋長袖" : "長袖即可，備一件薄外套";
+  if(rain >= 40) w += "；記得帶傘";
+  return w;
+}
+async function loadWeather(){
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${D.trip.lat}&longitude=${D.trip.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FSeoul&start_date=${D.trip.start}&end_date=${D.trip.end}`;
+  try{
+    const r = await fetch(url); if(!r.ok) throw 0;
+    const j = await r.json();
+    weather = {};
+    j.daily.time.forEach((t,i) => { weather[t] = {code:j.daily.weather_code[i], hi:Math.round(j.daily.temperature_2m_max[i]), lo:Math.round(j.daily.temperature_2m_min[i]), rain:j.daily.precipitation_probability_max[i] ?? 0}; });
+    weatherLive = true;
+  }catch(e){ weather = null; weatherLive = false; }
+  if(!$("#p-days").hidden) renderSummary();
+}
+
+/* ---------- 每日行程 ---------- */
+let curDay = store.get("day", 0);
+let rainMode = store.get("rain", false);
+let compact = store.get("compact", false);
+const done = store.get("done", {});
+const expenses = store.get("exp", {});
+let rate = store.get("rate", D.defaultRate);
+{ const t = seoulNow().date; const i = D.days.findIndex(d => d.date === t); if(i >= 0) curDay = i; }
+
+function renderDaysShell(){
+  $("#p-days").innerHTML = `
+    <div class="days" role="tablist" aria-label="選擇日期">
+      ${D.days.map((d,i) => { const f = dayInfo(d.date); return `<button class="day-btn" role="tab" data-day="${i}" aria-selected="${i===curDay}"><b>${f.md}</b><span>週${f.wk}・Day ${f.n}</span></button>`; }).join("")}
+    </div>
+    <div class="sticky"><div class="sum" id="sum"></div></div>
+    <div class="mode" role="group" aria-label="晴雨模式">
+      <button data-rain="0" aria-pressed="${!rainMode}">☀️ 晴天行程</button>
+      <button data-rain="1" aria-pressed="${rainMode}">☔ 雨天備案</button>
+    </div>
+    <div id="dayBody"></div>
+    <div class="card" id="expCard"></div>
+    ${backBtn}`;
+  $("#p-days").addEventListener("click", e => {
+    const db = e.target.closest("[data-day]");
+    if(db){ curDay = +db.dataset.day; store.set("day", curDay);
+      document.querySelectorAll(".day-btn").forEach(b => b.setAttribute("aria-selected", +b.dataset.day===curDay));
+      renderDay(true); return; }
+    const rb = e.target.closest("[data-rain]");
+    if(rb){ rainMode = rb.dataset.rain==="1"; store.set("rain", rainMode);
+      document.querySelectorAll("[data-rain]").forEach(b => b.setAttribute("aria-pressed", (b.dataset.rain==="1")===rainMode));
+      renderDay(false); return; }
+    const ck = e.target.closest("[data-done]");
+    if(ck){ const id = ck.dataset.done; done[id] = !done[id]; store.set("done", done);
+      const card = ck.closest(".item"); card.classList.toggle("done", !!done[id]);
+      ck.setAttribute("aria-pressed", !!done[id]); ck.querySelector(".lbl").textContent = done[id] ? "已完成" : "標記完成";
+      ck.querySelector(".box").textContent = done[id] ? "✓" : ""; return; }
+    if(e.target.closest("#sumToggle")){ compact = !compact; store.set("compact", compact); renderSummary(); return; }
+    const xb = e.target.closest("[data-delexp]");
+    if(xb){ const k = D.days[curDay].date; expenses[k].splice(+xb.dataset.delexp,1); store.set("exp", expenses); renderExp(); }
+  });
+}
+function renderSummary(){
+  const day = D.days[curDay];
+  const live = weather && weather[day.date];
+  const w = live || D.fallbackWeather;
+  const [ic, txt] = WMO(w.code);
+  const tonight = D.hotels.find(x => x.in <= day.date && day.date < x.out);
+  const leaving = D.hotels.find(x => x.out === day.date);
+  const h = tonight || leaving;
+  const stayLabel = leaving && tonight ? `${leaving.name} 退房 → 今晚 ${tonight.name}` : leaving ? `今日退房：${leaving.name}` : `今晚：${h.name}`;
+  $("#sum").className = "sum" + (compact ? " compact" : "");
+  $("#sum").innerHTML = `
+    <div class="wicon" aria-hidden="true">${ic}</div>
+    <div><button class="sum-toggle" id="sumToggle">${compact?"展開 ▾":"收合 ▴"}</button>
+      <span class="temps"><span class="hi">${w.hi}°</span> / <span class="lo">${w.lo}°</span></span>　${txt}　☔ ${w.rain}%</div>
+    <div class="small muted">${live ? "Open-Meteo 即時預報" : "11 月底平均（參考）"}${weatherLive && !live ? "・此日尚無預報" : ""}　<a href="https://www.google.com/search?q=${encodeURIComponent("釜山 天氣 " + dayInfo(day.date).md)}" target="_blank" rel="noopener" style="font-weight:700">查即時預報 ↗</a></div>
+    <div class="wear">👕 ${esc(wear(w.hi, w.lo, w.rain))}</div>
+    <div class="hotel">🏨 <b>${esc(stayLabel)}</b>
+      <span class="small muted">${esc(R(h.addr))}・${esc(h.station)} ${esc(h.walk)}</span>
+      <a href="${gmap(R("@ADDRQ"))}" target="_blank" rel="noopener">Google 地圖</a>
+      <a href="${nmap(R(h.addrKo))}" target="_blank" rel="noopener">Naver 地圖</a></div>`;
+}
+function moveHTML(m){
+  if(!m) return "";
+  const parts = [];
+  parts.push(`<b>${esc(m.mode)}</b>${m.line ? `・${esc(m.line)}` : ""}`);
+  parts.push(`${esc(m.from)} → ${esc(m.to)}　約 ${esc(m.mins).replace(/^約\s*/,"")}${m.dist ? `・${esc(m.dist)}` : ""}`);
+  if(m.walk) parts.push(`<span class="walk">🚶 ${esc(m.walk)}</span>`);
+  if(m.note) parts.push(`<span class="muted small">※ ${esc(m.note)}</span>`);
+  return `<div class="move"><div class="mv">${parts.join("<br>")}</div></div>`;
+}
+function itemHTML(it, id, i){
+  const alt = rainMode && it.rain;
+  const title = alt ? it.rain.title : it.title;
+  const ko = R(alt && it.rain.ko ? it.rain.ko : (it.ko || it.title));
+  const q = R(alt && it.rain.ko ? it.rain.ko : (it.q || it.title + " 부산"));
+  const rows = [];
+  if(it.type==="spot" && it.stay) rows.push(["預計停留", it.stay]);
+  if(it.type==="food"){ rows.push(["料理類型", it.cuisine], ["招牌菜色", it.dish], ["預算", it.budget], ["訂位", it.reserve]); }
+  if(it.type==="shop"){ rows.push(["推薦商品", it.goods], ["退稅", it.tax], ["營業時間", it.hours]); }
+  if(it.type==="conf" && it.stay) rows.push(["時間", it.stay]);
+  const isDone = !!done[id];
+  return `${moveHTML(it.move)}
+  <article class="item ${it.type}${isDone?" done":""} anim-in" style="animation-delay:${i*60}ms">
+    <div class="top"><div class="t">${esc(it.time)}</div>
+      <div style="flex:1">
+        <div class="kind">${TYPE[it.type]} ${it.must?'<span class="tag must">必去</span>':""} ${it.sample?'<span class="tag sample">範例</span>':""} ${it.todo?'<span class="tag todo">待確認</span>':""} ${alt?'<span class="tag rain">雨天備案</span>':""}</div>
+        <h3>${esc(title)}</h3>
+      </div></div>
+    ${alt ? `<p class="desc">${esc(it.rain.desc)}</p>` : (it.desc ? `<p class="desc">${esc(it.desc)}</p>` : "")}
+    ${!alt && rows.length ? `<dl>${rows.filter(r=>r[1]).map(r=>`<dt>${r[0]}</dt><dd>${esc(r[1])}</dd>`).join("")}</dl>` : ""}
+    ${it.todo ? `<p class="small" style="margin:6px 0 0">待確認：${esc(it.todo)}</p>` : ""}
+    ${!rainMode && it.rain ? `<div class="rainbox">☔ 雨天備案：${esc(it.rain.title)}</div>` : ""}
+    <div class="acts">
+      <button class="chk" data-done="${id}" aria-pressed="${isDone}"><span class="box">${isDone?"✓":""}</span><span class="lbl">${isDone?"已完成":"標記完成"}</span></button>
+      <a class="btn sm" href="${gmap(q)}" target="_blank" rel="noopener">📍 Google</a>
+      <a class="btn sm" href="${nmap(ko)}" target="_blank" rel="noopener">📍 Naver</a>
+    </div>
+  </article>`;
+}
+function renderDay(animate){
+  if(!$("#dayBody")) renderDaysShell();
+  const day = D.days[curDay];
+  const f = dayInfo(day.date);
+  renderSummary();
+  $("#dayBody").innerHTML = `
+    <div class="day-head"><div class="muted small">Day ${f.n}・${f.md}（${f.wk}）</div><h2>${esc(day.title)}</h2></div>
+    ${day.note ? `<div class="day-note">${esc(day.note)}</div>` : ""}
+    <div class="tl">${day.items.map((it,i) => itemHTML(it, day.date+"_"+i, animate ? i : 0)).join("")}</div>`;
+  if(!animate) document.querySelectorAll("#dayBody .anim-in").forEach(el => el.classList.remove("anim-in"));
+  const btn = document.querySelector(`.day-btn[data-day="${curDay}"]`);
+  if(btn) btn.scrollIntoView({block:"nearest", inline:"center"});
+  renderExp();
+}
+function renderExp(){
+  const day = D.days[curDay]; const k = day.date;
+  const list = expenses[k] || [];
+  const sum = list.reduce((a,b)=>a+b.krw,0);
+  const all = Object.values(expenses).flat().reduce((a,b)=>a+b.krw,0);
+  const twd = n => Math.round(n*rate).toLocaleString("zh-TW");
+  $("#expCard").innerHTML = `
+    <h3 style="color:var(--port)">💰 ${dayInfo(k).md} 花費紀錄</h3>
+    <div class="rate"><label for="rate">匯率 1 韓元 =</label><input id="rate" type="number" step="0.0001" inputmode="decimal" value="${rate}"> 新台幣
+      ${rate===D.defaultRate?'<span class="tag sample">範例匯率</span>':""}</div>
+    <form class="exp-form" id="expForm">
+      <input type="text" id="expDesc" placeholder="項目（例：午餐）" aria-label="項目">
+      <input type="number" id="expAmt" placeholder="₩ 金額" inputmode="numeric" min="0" aria-label="韓元金額">
+      <button class="btn solid" type="submit">加入</button>
+    </form>
+    <ul class="exp-list">${list.map((e,i)=>`<li><span>${esc(e.desc)}</span><span>₩${e.krw.toLocaleString("zh-TW")}</span><span class="muted small">≈ NT$${twd(e.krw)}</span><button class="x" data-delexp="${i}" aria-label="刪除">×</button></li>`).join("") || '<li class="muted small">還沒有紀錄</li>'}</ul>
+    <div class="total"><span>今日合計</span><span>₩${sum.toLocaleString("zh-TW")}　≈ NT$${twd(sum)}</span></div>
+    <div class="total small" style="color:var(--muted)"><span>全程累計</span><span>₩${all.toLocaleString("zh-TW")}　≈ NT$${twd(all)}</span></div>`;
+  $("#rate").addEventListener("change", e => { const v = parseFloat(e.target.value); if(v>0){ rate = v; store.set("rate", rate); renderExp(); } });
+  $("#expForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const amt = parseInt($("#expAmt").value, 10); const desc = $("#expDesc").value.trim() || "花費";
+    if(!(amt>0)) return;
+    (expenses[k] = expenses[k] || []).push({desc, krw:amt}); store.set("exp", expenses); renderExp();
+  });
+}
+
+/* ---------- 行前清單 ---------- */
+let cl = store.get("checklist", null);
+if(!cl){ cl = {}; for(const key of ["todo","pack"]) cl[key] = D.checklist[key].map(t => ({t, on:false})); }
+function renderCheck(){
+  const total = cl.todo.length + cl.pack.length;
+  const on = [...cl.todo, ...cl.pack].filter(x=>x.on).length;
+  const pct = total ? Math.round(on/total*100) : 0;
+  const group = (key, name) => `
+    <div class="card">
+      <h3 style="color:var(--port)">${name}　<span class="small muted">${cl[key].filter(x=>x.on).length} / ${cl[key].length}</span></h3>
+      <ul class="cl">${cl[key].map((x,i)=>`<li class="${x.on?"on":""}"><label><input type="checkbox" data-cl="${key}" data-i="${i}" ${x.on?"checked":""}><span>${esc(x.t)}</span></label><button class="x" data-cldel="${key}" data-i="${i}" aria-label="移除 ${esc(x.t)}">×</button></li>`).join("")}</ul>
+      <form class="add" data-add="${key}"><input type="text" placeholder="新增項目" aria-label="新增${name}"><button class="btn solid" type="submit">新增</button></form>
+    </div>`;
+  $("#p-check").innerHTML = `
+    <h2 class="sec-title">出發前準備</h2>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;font-weight:700"><span>整體進度</span><span>已完成 ${on} / ${total}（${pct}%）</span></div>
+      <div class="prog" style="margin-top:8px"><i style="width:${pct}%"></i></div>
+    </div>
+    ${group("todo","行前待辦")}${group("pack","行李準備")}
+    <button class="btn sm" id="clReset" style="margin-top:4px">恢復預設清單</button>
+    ${backBtn}`;
+}
+$("#p-check").addEventListener("change", e => {
+  const c = e.target.closest("[data-cl]"); if(!c) return;
+  cl[c.dataset.cl][+c.dataset.i].on = c.checked; store.set("checklist", cl); renderCheck();
+});
+$("#p-check").addEventListener("click", e => {
+  const d = e.target.closest("[data-cldel]");
+  if(d){ cl[d.dataset.cldel].splice(+d.dataset.i,1); store.set("checklist", cl); renderCheck(); }
+  if(e.target.closest("#clReset") && confirmReset()){ cl = null; store.set("checklist", null);
+    cl = {}; for(const key of ["todo","pack"]) cl[key] = D.checklist[key].map(t => ({t, on:false})); renderCheck(); }
+});
+function confirmReset(){ const b = $("#clReset"); if(b.dataset.armed){ return true; } b.dataset.armed = 1; b.textContent = "再按一次確認恢復"; return false; }
+$("#p-check").addEventListener("submit", e => {
+  const f = e.target.closest("[data-add]"); if(!f) return; e.preventDefault();
+  const v = f.querySelector("input").value.trim(); if(!v) return;
+  cl[f.dataset.add].push({t:v, on:false}); store.set("checklist", cl); renderCheck();
+});
+
+/* ---------- 住宿速查 ---------- */
+function renderStay(){
+  const hotelCard = h => `
+    <div class="card">
+      <h3 style="color:var(--port);font-size:19px">${esc(h.name)}　<span class="small muted">${esc(h.type)}</span></h3>
+      <p class="small muted" style="margin:2px 0 0">${esc(h.fullName)}</p>
+      <dl class="kv">
+        <dt>住宿期間</dt><dd><b>${esc(h.period)}</b></dd>
+        <dt>地址</dt><dd>${esc(R(h.addr))}${S ? `<br><span class="small">${esc(R(h.addrKo))}</span>` : ""}</dd>
+        <dt>最近車站</dt><dd>${esc(h.station)}</dd>
+        <dt>步行時間</dt><dd>${esc(h.walk)}</dd>
+        <dt>入住</dt><dd>${esc(h.checkin)}</dd>
+        <dt>退房</dt><dd>${esc(h.checkout)}</dd>
+        <dt>櫃台</dt><dd>${esc(h.desk)}</dd>
+        <dt>訂房編號</dt><dd>${esc(R(h.bookingNo))} ${S && h.bookingSample?'<span class="tag sample">範例</span>':""}</dd>
+      </dl>
+      <ul class="small" style="margin:8px 0 0;padding-left:20px">${h.notes.map(n=>`<li>${esc(n)}</li>`).join("")}</ul>
+      <div class="btnrow">
+        <a class="btn solid" href="${gmap(R("@ADDRQ"))}" target="_blank" rel="noopener">📍 Google 地圖</a>
+        <a class="btn solid" href="${nmap(R(h.addrKo))}" target="_blank" rel="noopener">📍 Naver 地圖</a>
+        <a class="btn" href="${esc(h.url)}" target="_blank" rel="noopener">Airbnb 頁面</a>
+      </div>
+    </div>`;
+  $("#p-stay").innerHTML = `
+    <h2 class="sec-title">住宿</h2>
+    <div class="day-note">兩間在同一棟（Marant，釜山站步行約 3 分鐘）。12/2 早上 #24 退房、寄放行李，晚上入住 #19。</div>
+    ${D.hotels.map(hotelCard).join("")}
+    <h2 class="sec-title">伴手禮與退稅</h2>
+    <div class="card small" style="font-size:15px">
+      <b style="color:var(--port)">退稅提醒</b>
+      <ul style="margin:4px 0 0;padding-left:20px">
+        <li>店門口貼 Tax Free／Tax Refund 標誌才能退。</li>
+        <li>單筆滿 ₩15,000 可辦，結帳時出示護照，多數可現場直接扣稅。</li>
+        <li>沒有現場退的單據，12/3 在金海機場出境前辦理。</li>
+        <li>即時退稅的金額上限以店家公告為準。</li>
+      </ul>
+    </div>
+    ${D.areas.map(a=>`<div class="card area">
+      <h3>${esc(a.name)}</h3>
+      <ul>${a.items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+      <p class="small" style="margin:6px 0 0">🧾 ${esc(a.tax)}</p>
+      <div class="btnrow"><a class="btn sm" href="${gmap(a.ko+" 부산")}" target="_blank" rel="noopener">Google 地圖</a><a class="btn sm" href="${nmap(a.ko)}" target="_blank" rel="noopener">Naver 地圖</a></div>
+    </div>`).join("")}
+    <h2 class="sec-title">緊急與實用</h2>
+    <div class="card">
+      <dl class="kv">
+        <dt>報警</dt><dd><a href="tel:112">112</a></dd>
+        <dt>火警・救護</dt><dd><a href="tel:119">119</a></dd>
+        <dt>觀光諮詢</dt><dd><a href="tel:1330">1330</a>（有中文服務）</dd>
+        <dt>叫車</dt><dd>Kakao T、Uber</dd>
+        <dt>地圖</dt><dd>Naver Map 的步行與大眾運輸路線最準</dd>
+      </dl>
+    </div>
+    ${backBtn}`;
+}
+
+/* ---------- 啟動 ---------- */
+renderOverview();
+renderDaysShell();
+renderDay(false);
+renderCheck();
+renderStay();
+showTab(store.get("tab", "overview"));
+loadWeather();
+setInterval(updateCount, 30000);
+(async () => { const pw = store.get("pw", null); if(pw && await unlock(pw)) rerenderAll(); })();
+})();
+</script>
+</body>
+</html>
