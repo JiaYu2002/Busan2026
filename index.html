@@ -135,6 +135,9 @@ a{color:var(--port)}
 .move .mv{background:#fff;border-radius:12px;padding:6px 10px;border:1px solid #c9d4de}
 .move .mv b{color:var(--port)}
 .move .mv .walk{color:var(--songdo);font-weight:700}
+.mvtabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.mvtabs button{min-height:36px;padding:2px 12px;border-radius:999px;border:1.5px solid var(--port);background:#fff;color:var(--port);font-size:14px;font-weight:700}
+.mvtabs button[aria-pressed="true"]{background:var(--port);color:#fff}
 
 .anim-in{animation:pop .5s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
@@ -263,15 +266,15 @@ const TRIP_DATA = {
         {time:"06:05", type:"base", title:"抵達金海國際機場", ko:"김해국제공항", desc:"入境、領行李，約 40–60 分鐘。"},
         {time:"08:00", type:"base", title:"Marant 寄放行李", ko:"@ADDRKO", q:"@ADDRQ",
          desc:"已確認可提早寄放；還不能入住（16:00 後）。",
-         move:{mode:"Uber／機場計程車", from:"金海機場", to:"Marant", mins:"35–60 分", note:"目的地輸入住宿韓文地址（解鎖後在「住宿速查」可看到）"}},
+         move:{tag:"計程車", mode:"Uber／機場計程車", from:"金海機場", to:"Marant", mins:"35–60 分", note:"目的地輸入住宿韓文地址（解鎖後在「住宿速查」可看到）", alt:[{tag:"地鐵", mode:"輕軌＋地鐵 2→1 號線", line:"釜山金海輕軌往沙上 → 沙上站轉 2 號線往萇山 → 西面轉 1 號線往多大浦", from:"機場站 공항역", to:"釜山站", mins:"65–80 分", walk:"釜山站出站步行到住宿約 5 分", note:"提大行李要轉乘兩次"}, {tag:"公車", mode:"機場巴士＋地鐵 1 號線", line:"機場搭巴士到西面 → 1 號線往多大浦", from:"金海機場", to:"釜山站", mins:"60–80 分", note:"房源頁面建議搭 2029 路到西面；路線與班次以 Naver Map 為準"}]}},
         {time:"08:20", type:"food", title:"麥當勞 釜山草梁DT店", ko:"맥도날드 부산초량DT점", cuisine:"速食早餐", dish:"早餐套餐", budget:"₩6,000–9,000", reserve:"不需訂位",
          move:{mode:"步行", from:"Marant", to:"麥當勞", dist:"約 800 m", mins:"10–15 分"}},
         {time:"10:15", type:"spot", must:true, title:"梵魚寺", ko:"범어사", stay:"約 1.5–2 小時",
          desc:"釜山最具代表性的千年古剎，秋末還有楓葉。",
-         move:{mode:"地鐵 1 號線＋90 號公車", line:"1 號線往老圃 노포", from:"釜山站", to:"梵魚寺站 범어사역", mins:"約 40 分", walk:"出站步行約 3 分到公車站，轉 90 號公車上山約 15 分", note:"公車班次以 Naver Map 為準"},
+         move:{tag:"地鐵＋公車", mode:"地鐵 1 號線＋90 號公車", line:"1 號線往老圃 노포", from:"釜山站", to:"梵魚寺站 범어사역", mins:"約 40 分", walk:"出站步行約 3 分到公車站，轉 90 號公車上山約 15 分", note:"公車班次以 Naver Map 為準", alt:[{tag:"地鐵＋計程車", mode:"地鐵 1 號線＋計程車", line:"1 號線往老圃 노포", from:"釜山站", to:"梵魚寺站 범어사역", mins:"約 50 分", walk:"出站搭計程車上山約 10 分"}]},
          rain:{title:"梵魚寺（縮短版）", desc:"雨天石階濕滑，只參觀大雄殿一帶，停留約 1 小時。"}},
         {time:"13:00", type:"food", sample:true, title:"南浦洞午餐", ko:"남포동 맛집", cuisine:"釜山鄉土料理", dish:"豬肉湯飯 돼지국밥、小麥冷麵 밀면", budget:"₩10,000–15,000", reserve:"多為現場排隊",
-         move:{mode:"90 號公車＋地鐵 1 號線", line:"1 號線往多大浦 다대포", from:"梵魚寺站", to:"南浦站 남포역", mins:"75–95 分"}},
+         move:{tag:"公車＋地鐵", mode:"90 號公車＋地鐵 1 號線", line:"1 號線往多大浦 다대포", from:"梵魚寺站", to:"南浦站 남포역", mins:"75–95 分", alt:[{tag:"計程車＋地鐵", mode:"計程車＋地鐵 1 號線", line:"1 號線往多大浦 다대포", from:"梵魚寺", to:"南浦站", mins:"65–80 分", walk:"計程車下山到梵魚寺站約 10 分"}]}},
         {time:"14:00", type:"shop", title:"光復路商店街・南浦地下街", ko:"광복로 패션거리", goods:"服飾、美妝（Olive Young）、生活雜貨", tax:"貼 Tax Free 標誌的店單筆滿 ₩15,000 可退稅，帶護照", hours:"約 10:30–22:00（各店不同）",
          move:{mode:"步行", from:"南浦洞餐廳", to:"光復路", dist:"約 300 m", mins:"5 分"}},
         {time:"15:30", type:"food", sample:true, title:"南浦洞咖啡廳休息", ko:"남포동 카페", cuisine:"咖啡甜點", dish:"拿鐵、可頌", budget:"₩6,000–10,000", reserve:"不需訂位"},
@@ -282,50 +285,50 @@ const TRIP_DATA = {
         {time:"21:00", type:"spot", title:"釜山塔（龍頭山公園）", ko:"부산타워", stay:"約 40 分", desc:"俯瞰南浦港夜景，營業至 22:00。",
          move:{mode:"步行＋戶外電扶梯", from:"BIFF 廣場", to:"龍頭山公園", dist:"約 400 m", mins:"10 分"}},
         {time:"22:00", type:"base", title:"回 Marant 入住", ko:"@ADDRKO", q:"@ADDRQ", desc:"領回寄放行李，辦理入住。",
-         move:{mode:"地鐵 1 號線", line:"往老圃 노포", from:"南浦站", to:"釜山站", mins:"約 5 分（2 站）", walk:"兩端各步行約 5 分"}}
+         move:{tag:"地鐵", mode:"地鐵 1 號線", line:"往老圃 노포", from:"南浦站", to:"釜山站", mins:"約 5 分（2 站）", walk:"兩端各步行約 5 分"}}
       ]},
     { date:"2026-11-28", title:"剪髮・Spa Land・廣安里", note:"19:00 無人機表演依天候可能取消；Spa 排在醫美之前。",
       items:[
         {time:"11:00", type:"shop", title:"新世界百貨 Centum City・剪髮", ko:"신세계백화점 센텀시티점", goods:"11:00 剪髮（固定預約）", tax:"百貨服務台可辦退稅", hours:"約 10:30–20:00（以官網為準）", todo:"沙龍名稱與樓層",
-         move:{mode:"地鐵 1→2 號線", line:"1 號線往老圃 → 西面轉 2 號線往萇山 장산", from:"釜山站", to:"Centum City 站 센텀시티역", mins:"45–60 分", walk:"出站後地下直通百貨"}},
+         move:{tag:"地鐵", mode:"地鐵 1→2 號線", line:"1 號線往老圃 → 西面轉 2 號線往萇山 장산", from:"釜山站", to:"Centum City 站 센텀시티역", mins:"45–60 分", walk:"出站後地下直通百貨", alt:[{tag:"計程車", mode:"計程車", from:"Marant", to:"新世界百貨 Centum City", mins:"30–45 分"}]}},
         {time:"12:30", type:"food", sample:true, title:"新世界百貨美食街午餐", ko:"신세계백화점 센텀시티점 푸드홀", cuisine:"韓式・多國料理", dish:"拌飯、炸醬麵", budget:"₩12,000–18,000", reserve:"不需訂位"},
         {time:"13:30", type:"shop", title:"新世界百貨購物", ko:"신세계백화점 센텀시티점", goods:"韓國設計品牌、美妝、地下超市零食", tax:"同日同店合併滿 ₩15,000 可退稅", hours:"約 10:30–20:00"},
         {time:"14:30", type:"spot", title:"Spa Land 汗蒸幕", ko:"스파랜드 센텀시티", stay:"約 2–2.5 小時", desc:"大型溫泉＋汗蒸幕，入場限時 4 小時。",
          move:{mode:"步行", from:"百貨", to:"Spa Land（同棟 1 樓）", mins:"5 分"}},
         {time:"17:00", type:"food", sample:true, title:"廣安里海景咖啡", ko:"광안리 오션뷰 카페", cuisine:"咖啡", dish:"海鹽拿鐵", budget:"₩7,000–10,000", reserve:"靠窗位建議早到",
-         move:{mode:"地鐵 2 號線", line:"往梁山 양산", from:"Centum City 站", to:"廣安站 광안역", mins:"約 10 分", walk:"步行到海灘約 15 分"}},
+         move:{tag:"地鐵", mode:"地鐵 2 號線", line:"往梁山 양산", from:"Centum City 站", to:"廣安站 광안역", mins:"約 10 分", walk:"步行到海灘約 15 分", alt:[{tag:"計程車", mode:"計程車", from:"Centum City", to:"廣安里海灘", mins:"約 10 分"}]}},
         {time:"18:00", type:"food", sample:true, title:"廣安里晚餐", ko:"광안리 횟집", cuisine:"海鮮", dish:"生魚片、烤貝 조개구이", budget:"₩30,000–45,000／人", reserve:"週六人多，建議 18:00 前入座"},
         {time:"19:00", type:"spot", must:true, title:"廣安里無人機燈光秀", ko:"광안리 드론쇼", stay:"約 15–20 分", desc:"週六晚上固定演出，依天候可能取消，提早找沙灘位置。",
          rain:{title:"室內看廣安大橋夜景", desc:"表演取消時，改到海景咖啡或餐廳二樓看大橋燈光。"}},
         {time:"19:30", type:"spot", title:"廣安大橋夜景散步", ko:"광안리해수욕장", stay:"約 1 小時", desc:"沿海灘散步拍大橋。"},
         {time:"21:00", type:"base", title:"回 Marant", ko:"@ADDRKO", q:"@ADDRQ",
-         move:{mode:"地鐵 2→1 號線", line:"2 號線往梁山 → 西面轉 1 號線往多大浦", from:"廣安站", to:"釜山站", mins:"50–75 分", walk:"海灘走回廣安站約 15 分"}}
+         move:{tag:"地鐵", mode:"地鐵 2→1 號線", line:"2 號線往梁山 → 西面轉 1 號線往多大浦", from:"廣安站", to:"釜山站", mins:"50–75 分", walk:"海灘走回廣安站約 15 分", alt:[{tag:"計程車", mode:"計程車", from:"廣安里", to:"Marant", mins:"30–40 分"}]}}
       ]},
     { date:"2026-11-29", title:"甘川洞韓服・松島・研討會報到", note:"韓服 10:00–13:00；15:00–18:00 不穿韓服（研討會報到）。",
       items:[
         {time:"10:00", type:"spot", must:true, title:"甘川洞文化村・韓服", ko:"감천문화마을", stay:"10:00–13:00（含換裝、歸還）", desc:"彩色階梯村落，穿韓服拍照；13:00 前歸還。", todo:"韓服店預約",
-         move:{mode:"地鐵 1 號線＋村巴", line:"1 號線往多大浦 다대포", from:"釜山站", to:"土城站 토성역 6 號出口", mins:"55–75 分（全程）", walk:"轉沙下 1-1 或西區 2、2-2 村巴上山約 15 分"},
+         move:{tag:"地鐵＋村巴", mode:"地鐵 1 號線＋村巴", line:"1 號線往多大浦 다대포", from:"釜山站", to:"土城站 토성역 6 號出口", mins:"55–75 分（全程）", walk:"轉沙下 1-1 或西區 2、2-2 村巴上山約 15 分", alt:[{tag:"計程車", mode:"計程車", from:"Marant", to:"甘川洞文化村", mins:"20–30 分"}]},
          rain:{title:"室內韓服攝影", desc:"改在韓服店附設攝影棚拍照，村內只逛有遮蔽的街道。"}},
         {time:"13:00", type:"food", sample:true, title:"甘川洞午餐", ko:"감천문화마을 맛집", cuisine:"輕食", dish:"魚糕、紫菜飯捲", budget:"₩8,000–12,000", reserve:"簡單吃，控制在 30 分內"},
         {time:"13:45", type:"spot", title:"松島雲端步道", ko:"송도구름산책로", stay:"約 20 分", desc:"海上透明步道。",
-         move:{mode:"計程車", from:"甘川洞", to:"松島雲端步道", mins:"20–35 分"}},
+         move:{tag:"計程車", mode:"計程車", from:"甘川洞", to:"松島雲端步道", mins:"20–35 分", alt:[{tag:"公車", mode:"村巴＋市區公車", from:"甘川洞", to:"松島海水浴場", mins:"40–55 分", walk:"下車步行到雲端步道約 5 分", note:"甘川洞搭村巴下山再轉往松島的公車；路線與班次以 Naver Map 為準"}]}},
         {time:"14:10", type:"spot", must:true, title:"松島海上纜車", ko:"송도해상케이블카", stay:"約 60 分（建議來回）", desc:"橫越海灣的纜車，Crystal 車廂地板透明。",
          move:{mode:"步行", from:"雲端步道", to:"松島灣站", dist:"約 500 m", mins:"5–10 分"},
          rain:{title:"松島海灘咖啡", desc:"強風或大雨纜車可能停駛，改在海灘旁咖啡廳休息後直接去報到。"}},
         {time:"15:30", type:"conf", title:"APIEMS 2026 報到", ko:"부산항국제전시컨벤션센터", desc:"15:00–18:00 報到，領名牌與議程，可留在會場到 18:00。",
-         move:{mode:"計程車", from:"松島", to:"BPEX", mins:"20–25 分"}},
+         move:{tag:"計程車", mode:"計程車", from:"松島", to:"BPEX", mins:"20–25 分", alt:[{tag:"公車＋地鐵", mode:"公車＋地鐵 1 號線", line:"公車到南浦站 → 1 號線往老圃", from:"松島", to:"釜山站", mins:"40–55 分", walk:"釜山站走到 BPEX 約 15 分", note:"要趕 15:30 報到時建議計程車；路線與班次以 Naver Map 為準"}]}},
         {time:"18:30", type:"food", sample:true, title:"西面晚餐", ko:"서면 맛집", cuisine:"韓式烤肉", dish:"豬五花 삼겹살", budget:"₩18,000–25,000／人", reserve:"週日晚上人多可先查 Catch Table",
-         move:{mode:"步行＋地鐵 1 號線", line:"往老圃 노포", from:"釜山站", to:"西面站 서면역", mins:"約 15 分", walk:"BPEX 走到釜山站約 15 分"}},
+         move:{tag:"地鐵", mode:"步行＋地鐵 1 號線", line:"往老圃 노포", from:"釜山站", to:"西面站 서면역", mins:"約 15 分", walk:"BPEX 走到釜山站約 15 分"}},
         {time:"19:30", type:"shop", title:"樂天百貨・西面街頭小吃", ko:"롯데백화점 부산본점", goods:"美妝、韓國品牌；路邊黑糖餅、魚糕", tax:"百貨可退稅，帶護照", hours:"百貨約至 20:00–20:30"},
         {time:"21:00", type:"base", title:"回 Marant", ko:"@ADDRKO", q:"@ADDRQ",
-         move:{mode:"地鐵 1 號線", line:"往多大浦 다대포", from:"西面站", to:"釜山站", mins:"約 15 分"}}
+         move:{tag:"地鐵", mode:"地鐵 1 號線", line:"往多大浦 다대포", from:"西面站", to:"釜山站", mins:"約 15 分"}}
       ]},
     { date:"2026-11-30", title:"研討會・西面・田浦咖啡街", note:"原表白天待定，以下為建議版；上午研討會為可選。18:00 前不穿韓服。",
       items:[
         {time:"09:30", type:"conf", sample:true, title:"APIEMS 聽演講（可選）", ko:"부산항국제전시컨벤션센터", desc:"想聽的場次再自行確認，預計待到 12:00。", todo:"想聽的場次",
          move:{mode:"步行", from:"Marant", to:"BPEX", dist:"約 1.2 km", mins:"15–20 分（或計程車 5 分）"}},
         {time:"12:30", type:"food", sample:true, title:"西面豬肉湯飯街", ko:"서면 돼지국밥골목", cuisine:"釜山鄉土料理", dish:"豬肉湯飯 돼지국밥", budget:"₩10,000–12,000", reserve:"不需訂位",
-         move:{mode:"地鐵 1 號線", line:"往老圃 노포", from:"釜山站", to:"西面站", mins:"約 15 分", walk:"BPEX 走到釜山站約 15 分"}},
+         move:{tag:"地鐵", mode:"地鐵 1 號線", line:"往老圃 노포", from:"釜山站", to:"西面站", mins:"約 15 分", walk:"BPEX 走到釜山站約 15 分"}},
         {time:"13:30", type:"shop", sample:true, title:"西面地下街・樂天百貨", ko:"서면지하상가", goods:"平價服飾、飾品；百貨美妝", tax:"地下街小店多數不能退稅，百貨可以", hours:"地下街約 10:00–21:30",
          move:{mode:"步行", from:"湯飯街", to:"西面地下街", mins:"5 分"}},
         {time:"15:00", type:"food", sample:true, title:"田浦咖啡街", ko:"전포카페거리", cuisine:"咖啡甜點", dish:"特色甜點、手沖咖啡", budget:"₩8,000–14,000", reserve:"不需訂位",
@@ -334,17 +337,17 @@ const TRIP_DATA = {
         {time:"18:00", type:"food", sample:true, title:"西面晚餐", ko:"서면 맛집", cuisine:"韓式", dish:"辣炒雞排 닭갈비", budget:"₩15,000–20,000", reserve:"不需訂位",
          move:{mode:"步行", from:"田浦", to:"西面", mins:"15 分"}},
         {time:"20:30", type:"spot", title:"黃嶺山觀景台", ko:"황령산 전망대", stay:"約 1 小時", desc:"俯瞰整個釜山的夜景，山上風大要穿暖。",
-         move:{mode:"計程車", from:"西面", to:"黃嶺山觀景台", mins:"15–20 分"},
+         move:{tag:"計程車", mode:"計程車", from:"西面", to:"黃嶺山觀景台", mins:"15–20 分", alt:[{tag:"公車", mode:"市區公車", from:"西面", to:"黃嶺山觀景台", mins:"30–45 分", note:"上山公車班次少，晚上建議計程車；路線與班次以 Naver Map 為準"}]},
          rain:{title:"西面夜間購物", desc:"雨天山上沒視野，改逛西面地下街與 Olive Young。"}},
         {time:"22:00", type:"base", title:"回 Marant", ko:"@ADDRKO", q:"@ADDRQ",
-         move:{mode:"計程車", from:"黃嶺山", to:"Marant", mins:"20–25 分"}}
+         move:{tag:"計程車", mode:"計程車", from:"黃嶺山", to:"Marant", mins:"20–25 分"}}
       ]},
     { date:"2026-12-01", title:"論文發表・白淺文化村・影島", note:"09:00 發表 D.6.4。12:00 前、18:00 後不穿韓服。",
       items:[
         {time:"09:00", type:"conf", must:true, title:"論文發表 D.6.4", ko:"부산항국제전시컨벤션센터", desc:"Influence of Artificial Fingernail Length and Shape on Hand Strength Performance｜Session D.6 Human Factors and Systems Safety (2)，09:00–10:20。", todo:"會議室",
          move:{mode:"步行", from:"Marant", to:"BPEX", dist:"約 1.2 km", mins:"15–20 分（08:30 出發）"}},
         {time:"11:00", type:"spot", must:true, title:"白淺文化村", ko:"흰여울문화마을", stay:"約 1.5 小時", desc:"影島海崖邊的白色村落，坡階多。",
-         move:{mode:"計程車", from:"BPEX", to:"白淺文化村", mins:"20–30 分（10:30 出發）"},
+         move:{tag:"計程車", mode:"計程車", from:"BPEX", to:"白淺文化村", mins:"20–30 分（10:30 出發）", alt:[{tag:"公車", mode:"市區公車", from:"釜山站", to:"白淺文化村 흰여울문화마을", mins:"30–45 分", walk:"BPEX 走到釜山站約 15 分", note:"釜山站前搭往影島的公車；路線與班次以 Naver Map 為準"}, {tag:"地鐵＋公車", mode:"地鐵 1 號線＋公車", line:"1 號線往多大浦 → 南浦站", from:"釜山站", to:"白淺文化村", mins:"35–50 分", walk:"南浦站轉往影島的公車約 15–20 分", note:"路線與班次以 Naver Map 為準"}]},
          rain:{title:"白淺文化村海景咖啡", desc:"雨天坡階濕滑，挑一家海景咖啡坐著看海。"}},
         {time:"12:30", type:"food", sample:true, title:"白淺文化村午餐", ko:"흰여울문화마을 맛집", cuisine:"韓式", dish:"海鮮刀削麵 칼국수", budget:"₩10,000–15,000", reserve:"不需訂位"},
         {time:"13:30", type:"spot", title:"影島絕影海岸步道", ko:"절영해안산책로", stay:"約 1 小時", desc:"沿海步道，依天氣調整長度。",
@@ -352,24 +355,24 @@ const TRIP_DATA = {
          rain:{title:"國立海洋博物館", ko:"국립해양박물관", desc:"影島的室內博物館，免費入場（計程車約 10 分）。"}},
         {time:"15:00", type:"food", sample:true, title:"影島海景咖啡", ko:"영도 오션뷰 카페", cuisine:"咖啡", dish:"季節飲品", budget:"₩7,000–10,000", reserve:"不需訂位"},
         {time:"16:00", type:"shop", title:"南浦洞伴手禮", ko:"삼진어묵 남포점", goods:"三進魚糕、海苔、柚子茶、堅果糖餅", tax:"三進魚糕等商店單筆滿 ₩15,000 可問退稅", hours:"約 09:00–21:00",
-         move:{mode:"計程車／公車", from:"影島", to:"南浦洞", mins:"20–40 分"}},
+         move:{tag:"公車", mode:"市區公車", from:"影島", to:"南浦洞", mins:"20–30 分", note:"路線與班次以 Naver Map 為準", alt:[{tag:"計程車", mode:"計程車", from:"影島", to:"南浦洞", mins:"10–20 分"}]}},
         {time:"18:00", type:"food", sample:true, title:"南浦洞晚餐", ko:"남포동 맛집", cuisine:"韓式", dish:"牛骨湯 / 辣燉雞", budget:"₩12,000–20,000", reserve:"不需訂位"},
         {time:"20:30", type:"spot", title:"青鶴水邊公園夜景", ko:"청학수변공원", stay:"約 40 分", desc:"看北港大橋與港口夜景。",
-         move:{mode:"計程車", from:"南浦洞", to:"青鶴水邊公園", mins:"約 15 分"}},
+         move:{tag:"計程車", mode:"計程車", from:"南浦洞", to:"青鶴水邊公園", mins:"約 15 分", alt:[{tag:"公車", mode:"市區公車", from:"南浦洞", to:"青鶴水邊公園", mins:"25–35 分", note:"路線與班次以 Naver Map 為準"}]}},
         {time:"21:30", type:"base", title:"回 Marant", ko:"@ADDRKO", q:"@ADDRQ",
-         move:{mode:"計程車", from:"青鶴", to:"Marant", mins:"約 15 分"}}
+         move:{tag:"計程車", mode:"計程車", from:"青鶴", to:"Marant", mins:"約 15 分", alt:[{tag:"公車＋地鐵", mode:"公車＋地鐵 1 號線", line:"公車到南浦站 → 1 號線往老圃", from:"青鶴", to:"釜山站", mins:"30–45 分", note:"路線與班次以 Naver Map 為準"}]}}
       ]},
     { date:"2026-12-02", title:"換房・Skyline Luge 滑車・西面醫美", note:"今天換房：早上 #24 退房寄行李，晚上入住 #19。醫美時段為預留，診所未定；醫美後避免汗蒸幕與飲酒。",
       items:[
         {time:"08:45", type:"base", title:"Marant #24 退房・寄放行李", ko:"@ADDRKO", q:"@ADDRQ", desc:"行李寄在一樓櫃台（已確認可提早寄放），晚上入住 #19 時一起領。"},
         {time:"10:00", type:"spot", must:true, title:"Skyline Luge 釜山（Osiria）", ko:"스카이라인루지 부산", stay:"約 2 小時（玩 2–3 趟）", desc:"10:00 開門，報到、聽說明後上山滑。",
-         move:{mode:"Uber／計程車", from:"Marant", to:"Osiria", mins:"45–65 分（09:00 出發）", note:"大眾運輸需轉東海線到 오시리아站，再步行約 20 分"},
+         move:{tag:"計程車", mode:"Uber／計程車", from:"Marant", to:"Osiria", mins:"45–65 分（09:00 出發）", note:"大眾運輸需轉東海線到 오시리아站，再步行約 20 分", alt:[{tag:"地鐵", mode:"地鐵 1 號線＋東海線", line:"1 號線往老圃 → 教大站 교대 轉東海線往太和江 태화강", from:"釜山站", to:"오시리아站", mins:"80–110 分", walk:"出站步行到 Skyline Luge 約 15–20 分", note:"要 10:00 到的話約 08:15 出發"}]},
          rain:{title:"樂天 Premium Outlet 東釜山店", ko:"롯데프리미엄아울렛 동부산점", desc:"雨天滑車可能暫停，改逛同在 Osiria 的 Outlet。"}},
         {time:"12:00", type:"food", sample:true, title:"Osiria 午餐", ko:"오시리아 맛집", cuisine:"韓式", dish:"海鮮拉麵、烤魚", budget:"₩12,000–18,000", reserve:"不需訂位"},
         {time:"14:00", type:"base", title:"西面醫美（預留）", ko:"서면 피부과", desc:"14:00–17:30 預留給諮詢與療程。", todo:"診所地址、療程、術後限制",
-         move:{mode:"Uber／計程車", from:"Osiria", to:"西面", mins:"40–65 分（13:00 出發）"}},
+         move:{tag:"計程車", mode:"Uber／計程車", from:"Osiria", to:"西面", mins:"40–65 分（13:00 出發）", alt:[{tag:"地鐵", mode:"東海線＋地鐵 1 號線", line:"東海線往釜田 부전（終點）→ 轉 1 號線往多大浦 1 站", from:"오시리아站", to:"西面站", mins:"60–75 分", walk:"Skyline Luge 走到 오시리아站約 15–20 分"}]}},
         {time:"18:00", type:"food", sample:true, title:"飯店附近輕鬆晚餐", ko:"초량동 맛집", cuisine:"清淡韓式", dish:"粥 / 湯飯", budget:"₩10,000–14,000", reserve:"不需訂位",
-         move:{mode:"地鐵 1 號線", line:"往多大浦 다대포", from:"西面站", to:"釜山站", mins:"20–30 分"}},
+         move:{tag:"地鐵", mode:"地鐵 1 號線", line:"往多大浦 다대포", from:"西面站", to:"釜山站", mins:"20–30 分"}},
         {time:"19:00", type:"base", title:"入住 Marant House #19・領行李", ko:"@ADDRKO", q:"@ADDRQ", desc:"到一樓櫃台領回早上寄的行李，辦理入住。",
          move:{mode:"步行", from:"餐廳", to:"Marant", mins:"5–10 分"}},
         {time:"19:30", type:"base", sample:true, title:"晚上自由時間", desc:"依術後狀況休息或附近散步。", todo:"晚上行程"}
@@ -378,7 +381,7 @@ const TRIP_DATA = {
       items:[
         {time:"09:00", type:"base", title:"Marant House #19 退房・寄放行李", ko:"@ADDRKO", q:"@ADDRQ", desc:"請櫃台寄放到傍晚，確認 17:20 回來領。"},
         {time:"10:45", type:"food", title:"海雲台市場", ko:"해운대시장", cuisine:"市場小吃", dish:"魚糕、辣炒年糕、血腸", budget:"₩10,000–20,000", reserve:"不需訂位",
-         move:{mode:"地鐵 1→2 號線", line:"1 號線往老圃 → 西面轉 2 號線往萇山 장산", from:"釜山站", to:"海雲台站 해운대역", mins:"65–85 分", walk:"出站步行到市場約 5 分"}},
+         move:{tag:"地鐵", mode:"地鐵 1→2 號線", line:"1 號線往老圃 → 西面轉 2 號線往萇山 장산", from:"釜山站", to:"海雲台站 해운대역", mins:"65–85 分", walk:"出站步行到市場約 5 分", alt:[{tag:"計程車", mode:"計程車", from:"Marant", to:"海雲台市場", mins:"40–55 分"}]}},
         {time:"11:30", type:"spot", title:"海雲台海灘", ko:"해운대해수욕장", stay:"約 30 分", desc:"往海灘東側尾浦方向走。",
          move:{mode:"步行", from:"市場", to:"海灘", dist:"約 300 m", mins:"5 分"},
          rain:{title:"SEA LIFE 釜山水族館", ko:"씨라이프 부산아쿠아리움", desc:"就在海灘旁的室內水族館。"}},
@@ -387,11 +390,11 @@ const TRIP_DATA = {
          rain:{title:"青沙浦（搭計程車前往）", desc:"雨天不走步道，海雲台搭計程車約 10 分。"}},
         {time:"14:00", type:"spot", must:true, title:"尾浦站報到 → 15:00 天空膠囊", ko:"해운대 블루라인파크 미포정거장", stay:"報到 14:00–14:30，搭乘約 30 分",
          desc:"已訂 15:00 尾浦 → 青沙浦單程，不可從青沙浦上車。",
-         move:{mode:"海岸列車 Beach Train", line:"往尾浦 미포 方向", from:"青沙浦站", to:"尾浦站", mins:"10–15 分＋候車 30–50 分", note:"若等太久改搭計程車，14:30 前一定要到"}},
+         move:{tag:"海岸列車", mode:"海岸列車 Beach Train", line:"往尾浦 미포 方向", from:"青沙浦站", to:"尾浦站", mins:"10–15 分＋候車 30–50 分", note:"若等太久改搭計程車，14:30 前一定要到", alt:[{tag:"計程車", mode:"計程車", from:"青沙浦", to:"尾浦站", mins:"約 10 分", note:"14:30 前一定要到尾浦"}]}},
         {time:"17:20", type:"base", title:"Marant 領行李", ko:"@ADDRKO", q:"@ADDRQ", desc:"確認護照、錢包、充電器。",
-         move:{mode:"Uber／計程車", from:"青沙浦", to:"Marant", mins:"60–80 分（15:40 出發）"}},
+         move:{tag:"計程車", mode:"Uber／計程車", from:"青沙浦", to:"Marant", mins:"60–80 分（15:40 出發）", alt:[{tag:"地鐵", mode:"公車＋地鐵 2→1 號線", line:"公車或計程車到海雲台站 → 2 號線往梁山 → 西面轉 1 號線往多大浦", from:"青沙浦", to:"釜山站", mins:"80–100 分", note:"17:20 要回去領行李，時間偏緊"}]}},
         {time:"18:40", type:"base", title:"金海機場報到", ko:"김해국제공항 국제선", desc:"ZE987 22:10 起飛，報到、退稅、安檢，緩衝約 3 小時。",
-         move:{mode:"Uber／計程車", from:"Marant", to:"金海機場國際線", mins:"40–60 分（17:40 出發）"}},
+         move:{tag:"計程車", mode:"Uber／計程車", from:"Marant", to:"金海機場國際線", mins:"40–60 分（17:40 出發）", alt:[{tag:"地鐵", mode:"地鐵 1→2 號線＋輕軌", line:"1 號線往老圃 → 西面轉 2 號線往梁山 → 沙上站轉輕軌往加耶大 가야대", from:"釜山站", to:"機場站 공항역", mins:"60–75 分", note:"提大行李要轉乘兩次"}]}},
         {time:"22:10", type:"base", title:"ZE987 起飛 → 00:25 抵達桃園", ko:"김해국제공항 국제선", desc:"回家囉。"}
       ]}
   ],
@@ -695,6 +698,7 @@ function renderDaysShell(){
       <button data-rain="0" aria-pressed="${!rainMode}">☀️ 晴天行程</button>
       <button data-rain="1" aria-pressed="${rainMode}">☔ 雨天備案</button>
     </div>
+    <p class="small muted" style="margin:-4px 0 8px">交通可點上方按鈕切換地鐵／公車／計程車，選擇會記住。</p>
     <div id="dayBody"></div>
     <div class="card" id="expCard"></div>
     ${backBtn}`;
@@ -712,6 +716,11 @@ function renderDaysShell(){
       const card = ck.closest(".item"); card.classList.toggle("done", !!done[id]);
       ck.setAttribute("aria-pressed", !!done[id]); ck.querySelector(".lbl").textContent = done[id] ? "已完成" : "標記完成";
       ck.querySelector(".box").textContent = done[id] ? "✓" : ""; return; }
+    const mt = e.target.closest("[data-mv]");
+    if(mt){ const id = mt.dataset.mv; moveSel[id] = +mt.dataset.k; store.set("moveSel", moveSel);
+      const box = document.getElementById("mv-"+id); const opts = moveById[id];
+      if(box && opts){ const [m0, ...alt] = opts; box.outerHTML = moveHTML({...m0, alt}, id); }
+      return; }
     if(e.target.closest("#sumToggle")){ compact = !compact; store.set("compact", compact); renderSummary(); return; }
     const xb = e.target.closest("[data-delexp]");
     if(xb){ const k = D.days[curDay].date; expenses[k].splice(+xb.dataset.delexp,1); store.set("exp", expenses); renderExp(); }
@@ -738,14 +747,22 @@ function renderSummary(){
       <a href="${gmap(R("@ADDRQ"))}" target="_blank" rel="noopener">Google 地圖</a>
       <a href="${nmap(R(h.addrKo))}" target="_blank" rel="noopener">Naver 地圖</a></div>`;
 }
-function moveHTML(m){
-  if(!m) return "";
+const moveSel = store.get("moveSel", {});
+const moveById = {};
+function moveHTML(m0, id){
+  if(!m0) return "";
+  const opts = [m0, ...(m0.alt || [])];
+  moveById[id] = opts;
+  let k = moveSel[id];
+  if(k == null || !opts[k]){ k = opts.findIndex(o => (o.tag || "").startsWith("地鐵")); if(k < 0) k = 0; }
+  const m = opts[k];
+  const tabs = opts.length > 1 ? `<div class="mvtabs" role="group" aria-label="交通方式">${opts.map((o,i)=>`<button data-mv="${id}" data-k="${i}" aria-pressed="${i===k}">${esc(o.tag || o.mode)}</button>`).join("")}</div>` : "";
   const parts = [];
   parts.push(`<b>${esc(m.mode)}</b>${m.line ? `・${esc(m.line)}` : ""}`);
   parts.push(`${esc(m.from)} → ${esc(m.to)}　約 ${esc(m.mins).replace(/^約\s*/,"")}${m.dist ? `・${esc(m.dist)}` : ""}`);
   if(m.walk) parts.push(`<span class="walk">🚶 ${esc(m.walk)}</span>`);
   if(m.note) parts.push(`<span class="muted small">※ ${esc(m.note)}</span>`);
-  return `<div class="move"><div class="mv">${parts.join("<br>")}</div></div>`;
+  return `<div class="move" id="mv-${id}"><div class="mv">${tabs}${parts.join("<br>")}</div></div>`;
 }
 function itemHTML(it, id, i){
   const alt = rainMode && it.rain;
@@ -758,7 +775,7 @@ function itemHTML(it, id, i){
   if(it.type==="shop"){ rows.push(["推薦商品", it.goods], ["退稅", it.tax], ["營業時間", it.hours]); }
   if(it.type==="conf" && it.stay) rows.push(["時間", it.stay]);
   const isDone = !!done[id];
-  return `${moveHTML(it.move)}
+  return `${moveHTML(it.move, id)}
   <article class="item ${it.type}${isDone?" done":""} anim-in" style="animation-delay:${i*60}ms">
     <div class="top"><div class="t">${esc(it.time)}</div>
       <div style="flex:1">
