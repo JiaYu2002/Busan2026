@@ -35,6 +35,7 @@ a{color:var(--port)}
 .tag.sample{color:var(--fishcake);background:#fff}
 .tag.must{color:#fff;background:var(--fishcake);border-color:var(--fishcake)}
 .tag.todo{color:#8a5a00;background:#FFF6E0}
+.tag.who{color:#fff;background:var(--songdo);border-color:var(--songdo)}
 .tag.rain{color:var(--port);background:#E3F0F7}
 .muted{color:var(--muted)}
 .small{font-size:14px}
@@ -304,22 +305,25 @@ const TRIP_DATA = {
         {time:"21:00", type:"base", title:"回 Marant", ko:"@ADDRKO", q:"@ADDRQ",
          move:{tag:"地鐵", mode:"地鐵 2→1 號線", line:"2 號線往梁山 → 西面轉 1 號線往多大浦", from:"廣安站", to:"釜山站", mins:"50–75 分", walk:"海灘走回廣安站約 15 分", alt:[{tag:"計程車", mode:"計程車", from:"廣安里", to:"Marant", mins:"30–40 分"}]}}
       ]},
-    { date:"2026-11-29", title:"甘川洞韓服・松島纜車・西面", note:"韓服 10:00–13:00，13:00 前歸還；15:00–18:00 不穿韓服。新行程表沒有排研討會報到（15:00–18:00 改去松島纜車），可改在 12/1 早上發表前報到，請確認。",
+    { date:"2026-11-29", title:"甘川洞韓服・研討會報到／家人搭纜車・西面", note:"韓服 10:00–13:00，13:00 前歸還；15:00–18:00 不穿韓服。14:30 起分頭：我去 BPEX 報到（15:00–18:00），家人去松島纜車；18:30 在西面會合吃晚餐。",
       items:[
         {time:"10:00", type:"spot", must:true, title:"甘川洞文化村・韓服", ko:"감천문화마을", stay:"10:00–13:00（含換裝、拍照、歸還）", desc:"彩色階梯村落，穿韓服拍照；13:00 前歸還。", todo:"韓服店預約與租借時數",
          move:{tag:"地鐵＋村巴", mode:"地鐵 1 號線＋村巴", line:"1 號線往多大浦 다대포", from:"釜山站", to:"土城站 토성역 6 號出口", mins:"55–75 分（全程）", walk:"轉沙下 1-1 或西區 2、2-2 村巴上山約 15 分", alt:[{tag:"計程車", mode:"計程車", from:"Marant", to:"甘川洞文化村", mins:"20–30 分"}]},
          rain:{title:"室內韓服攝影", desc:"改在韓服店附設攝影棚拍照，村內只逛有遮蔽的街道。"}},
         {time:"13:00", type:"food", sample:true, title:"還韓服・甘川洞午餐", ko:"감천문화마을 맛집", cuisine:"輕食", dish:"魚糕、紫菜飯捲", budget:"₩8,000–12,000", reserve:"吃完直接叫車去松島"},
-        {time:"14:00", type:"spot", title:"松島雲端步道・松島海灘", ko:"송도구름산책로", stay:"約 1 小時", desc:"海上透明步道，沿海灘散步到纜車站。",
+        {time:"14:00", type:"spot", title:"松島雲端步道・松島海灘", ko:"송도구름산책로", stay:"約 30 分（一起）", desc:"海上透明步道，拍完照就分頭行動。",
          move:{tag:"計程車", mode:"計程車", from:"甘川洞", to:"松島雲端步道", mins:"20–35 分", alt:[{tag:"公車", mode:"村巴＋市區公車", from:"甘川洞", to:"松島海水浴場", mins:"40–55 分", walk:"下車步行到雲端步道約 5 分", note:"甘川洞搭村巴下山再轉往松島的公車；路線與班次以 Naver Map 為準"}]}},
-        {time:"15:00", type:"spot", must:true, title:"松島海上纜車（來回）", ko:"송도해상케이블카", stay:"預留 90–120 分（含對岸散步）", desc:"建議買來回票；到對岸岩南公園短暫散步再搭回來。11/30–12/1 纜車因檢修調整時間，所以排在今天。",
-         move:{tag:"步行", mode:"步行", from:"松島海灘", to:"松島灣站 Songdo Bay Station", dist:"約 500 m", mins:"5–15 分"},
+        {time:"14:30", type:"conf", who:"我", must:true, title:"APIEMS 2026 報到", ko:"부산항국제전시컨벤션센터", desc:"15:00–18:00 報到，領名牌與議程，可留在會場到 18:00。不穿韓服。",
+         move:{tag:"計程車", mode:"計程車", from:"松島", to:"BPEX", mins:"20–25 分", alt:[{tag:"公車＋地鐵", mode:"公車＋地鐵 1 號線", line:"公車到南浦站 → 1 號線往老圃", from:"松島", to:"釜山站", mins:"40–55 分", walk:"釜山站走到 BPEX 約 15 分", note:"要準時報到建議計程車；路線與班次以 Naver Map 為準"}]}},
+        {time:"15:00", type:"spot", who:"家人", must:true, title:"松島海上纜車（來回）", ko:"송도해상케이블카", stay:"預留 90–120 分（含對岸散步）", desc:"建議買來回票；到對岸岩南公園短暫散步再搭回來。11/30–12/1 纜車因檢修調整時間，所以排在今天。",
+         move:{tag:"步行", mode:"步行", from:"松島雲端步道", to:"松島灣站 Songdo Bay Station", dist:"約 500 m", mins:"5–15 分"},
          rain:{title:"松島海景咖啡", desc:"強風或大雨纜車可能停駛，改在海灘旁咖啡廳看海。"}},
-        {time:"17:00", type:"food", sample:true, title:"松島海邊散步・海景咖啡", ko:"송도해수욕장 카페", cuisine:"咖啡", dish:"熱拿鐵、甜點", budget:"₩7,000–12,000", reserve:"不需訂位（17:12 左右日落）"},
-        {time:"18:00", type:"food", sample:true, title:"松島晚餐", ko:"송도해수욕장 맛집", cuisine:"海鮮", dish:"烤貝 조개구이、海鮮湯", budget:"₩25,000–40,000／人", reserve:"不需訂位"},
-        {time:"19:00", type:"shop", title:"西面樂天百貨・路邊美食", ko:"롯데백화점 부산본점", goods:"美妝、韓國品牌；路邊黑糖餅、魚糕", tax:"百貨單筆滿 ₩15,000 可退稅，帶護照", hours:"百貨約至 20:00–20:30",
-         move:{tag:"計程車", mode:"計程車", from:"松島", to:"西面", mins:"30–40 分", alt:[{tag:"公車＋地鐵", mode:"公車＋地鐵 1 號線", line:"公車到南浦站 → 1 號線往老圃", from:"松島", to:"西面站", mins:"45–60 分", note:"路線與班次以 Naver Map 為準"}]}},
-        {time:"20:00", type:"food", sample:true, title:"西面逛街・甜點", ko:"서면 디저트", cuisine:"甜點", dish:"雪冰、鯛魚燒", budget:"₩6,000–12,000", reserve:"不需訂位"},
+        {time:"17:00", type:"food", who:"家人", sample:true, title:"松島海邊散步・海景咖啡", ko:"송도해수욕장 카페", cuisine:"咖啡", dish:"熱拿鐵、甜點", budget:"₩7,000–12,000", reserve:"不需訂位（17:12 左右日落）"},
+        {time:"18:30", type:"food", sample:true, title:"西面晚餐（會合）", ko:"서면 맛집", cuisine:"韓式", dish:"豬五花 삼겹살、湯飯", budget:"₩15,000–25,000／人", reserve:"週日晚上人多，先查好餐廳",
+         move:{tag:"我・地鐵", mode:"步行＋地鐵 1 號線", line:"往老圃 노포", from:"釜山站", to:"西面站 서면역", mins:"約 15 分", walk:"BPEX 走到釜山站約 15 分（18:00 離開會場）", alt:[{tag:"我・計程車", mode:"計程車", from:"BPEX", to:"西面", mins:"15–20 分"}, {tag:"家人・計程車", mode:"計程車", from:"松島", to:"西面", mins:"30–40 分（17:50 出發）"}, {tag:"家人・公車＋地鐵", mode:"公車＋地鐵 1 號線", line:"公車到南浦站 → 1 號線往老圃", from:"松島", to:"西面站", mins:"45–60 分（17:30 出發）", note:"路線與班次以 Naver Map 為準"}]}},
+        {time:"19:30", type:"shop", title:"西面樂天百貨・路邊美食", ko:"롯데백화점 부산본점", goods:"美妝、韓國品牌；路邊黑糖餅、魚糕", tax:"百貨單筆滿 ₩15,000 可退稅，帶護照", hours:"百貨約至 20:00–20:30",
+         move:{tag:"步行", mode:"步行", from:"西面餐廳", to:"樂天百貨", mins:"5–10 分"}},
+        {time:"20:30", type:"food", sample:true, title:"西面甜點", ko:"서면 디저트", cuisine:"甜點", dish:"雪冰、鯛魚燒", budget:"₩6,000–12,000", reserve:"不需訂位"},
         {time:"21:00", type:"base", title:"回 Marant", ko:"@ADDRKO", q:"@ADDRQ",
          move:{tag:"地鐵", mode:"地鐵 1 號線", line:"往多大浦 다대포", from:"西面站", to:"釜山站", mins:"約 15 分", alt:[{tag:"計程車", mode:"計程車", from:"西面", to:"Marant", mins:"15–20 分"}, {tag:"公車", mode:"市區公車", from:"西面", to:"釜山站", mins:"25–35 分", note:"路線與班次以 Naver Map 為準"}]}}
       ]},
@@ -345,7 +349,7 @@ const TRIP_DATA = {
       ]},
     { date:"2026-12-01", title:"論文發表・白淺・ARTE Museum・南浦洞", note:"09:00 發表 D.6.4。12:00 前、18:00 後不穿韓服。索芒階梯在西區（不在影島），排在發表後、白淺之前，少繞一趟路；晚上青鶴水邊公園排在釜山站小店前面。",
       items:[
-        {time:"09:00", type:"conf", must:true, title:"論文發表 D.6.4", ko:"부산항국제전시컨벤션센터", desc:"Influence of Artificial Fingernail Length and Shape on Hand Strength Performance｜Session D.6 Human Factors and Systems Safety (2)，09:00–10:20。", todo:"會議室；若 11/29 沒報到，發表前先報到",
+        {time:"09:00", type:"conf", must:true, title:"論文發表 D.6.4", ko:"부산항국제전시컨벤션센터", desc:"Influence of Artificial Fingernail Length and Shape on Hand Strength Performance｜Session D.6 Human Factors and Systems Safety (2)，09:00–10:20。", todo:"會議室",
          move:{tag:"步行", mode:"步行", from:"Marant", to:"BPEX", dist:"約 1.2 km", mins:"15–20 分（08:15 出發）"}},
         {time:"10:45", type:"spot", title:"索芒階梯・單軌電車", ko:"소망계단 모노레일", q:"소망계단 모노레일 부산 서구", stay:"約 30 分", desc:"西區東大新洞的長階梯，旁邊有免費單軌電車上下；07:30–20:00，強風時可能暫停。",
          move:{tag:"計程車", mode:"計程車", from:"BPEX", to:"索芒階梯（東大新洞）", mins:"10–15 分（10:30 出發）", alt:[{tag:"地鐵", mode:"地鐵 1 號線", line:"往多大浦 다대포", from:"釜山站", to:"東大新站 동대신역", mins:"20–30 分（全程）", walk:"BPEX 走到釜山站約 15 分；出站步行到階梯約 10 分", note:"出口與步行路線以 Naver Map 為準"}]},
@@ -789,7 +793,7 @@ function itemHTML(it, id, i){
   <article class="item ${it.type}${isDone?" done":""} anim-in" style="animation-delay:${i*60}ms">
     <div class="top"><div class="t">${esc(it.time)}</div>
       <div style="flex:1">
-        <div class="kind">${TYPE[it.type]} ${it.must?'<span class="tag must">必去</span>':""} ${it.sample?'<span class="tag sample">範例</span>':""} ${it.todo?'<span class="tag todo">待確認</span>':""} ${alt?'<span class="tag rain">雨天備案</span>':""}</div>
+        <div class="kind">${TYPE[it.type]} ${it.who?`<span class="tag who">${esc(it.who)}</span>`:""} ${it.must?'<span class="tag must">必去</span>':""} ${it.sample?'<span class="tag sample">範例</span>':""} ${it.todo?'<span class="tag todo">待確認</span>':""} ${alt?'<span class="tag rain">雨天備案</span>':""}</div>
         <h3>${esc(title)}</h3>
       </div></div>
     ${alt ? `<p class="desc">${esc(it.rain.desc)}</p>` : (it.desc ? `<p class="desc">${esc(it.desc)}</p>` : "")}
